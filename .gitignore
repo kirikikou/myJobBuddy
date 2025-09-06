@@ -1,17 +1,26 @@
-# Dépendances Node
+# Fichiers sensibles
+.env
+A_directory_structure.txt
+architecture.py
+client_secret_*.json
+
+# Dépendances
 node_modules/
 
-# Données temporaires de navigation
-browser_data/
-
-# Cache interne
+# Données temporaires / internes
+logs/
+monitoring_data/
+user_preferences/
+profiles/
+run/
 cache/
-
-# Dossiers de debug
+browser_data/
 debug/
-
-# Scripts locaux non versionnés
 scripts/
-
-# Sanity checks et tests
 sanityCheck/
+
+# Autres fichiers à éviter
+*.log
+*.pid
+*.zip
+*.bak

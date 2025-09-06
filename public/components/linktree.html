@@ -1,0 +1,627 @@
+<!-- Linktree Manager Page -->
+<div class="page-header">
+    <h2 class="page-title" data-i18n="linktree.title">Linktree Manager</h2>
+    <div class="header-actions">
+        <button class="btn btn-primary" id="preview-all-btn">
+            <i class="fas fa-eye"></i>
+            <span data-i18n="linktree.previewAll">Preview All</span>
+        </button>
+    </div>
+</div>
+
+<div class="linktree-grid">
+    <!-- Linktree 1 -->
+    <div class="linktree-card" data-tree-id="1">
+        <div class="linktree-card-header">
+            <div class="linktree-title">
+                <i class="fas fa-tree"></i>
+                <span data-i18n="linktree.linktree1">Linktree #1</span>
+            </div>
+            <div class="linktree-status" id="status-1">
+                <span class="status-badge inactive" data-i18n="linktree.inactive">Inactive</span>
+            </div>
+        </div>
+        
+        <div class="linktree-card-body">
+            <div class="linktree-preview" id="preview-1">
+                <div class="preview-placeholder">
+                    <i class="fas fa-plus-circle"></i>
+                    <p data-i18n="linktree.createFirstLinktree">Create your first linktree</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="linktree-card-footer">
+            <button class="btn btn-outline btn-sm" id="edit-1">
+                <i class="fas fa-edit"></i>
+                <span data-i18n="common.edit">Edit</span>
+            </button>
+            <button class="btn btn-success btn-sm" id="preview-1-btn">
+                <i class="fas fa-eye"></i>
+                <span data-i18n="common.preview">Preview</span>
+            </button>
+            <button class="btn btn-primary btn-sm copy-link-btn" id="copy-1" data-url="" disabled>
+                <i class="fas fa-copy"></i>
+                <span data-i18n="linktree.copyLink">Copy Link</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Linktree 2 -->
+    <div class="linktree-card" data-tree-id="2">
+        <div class="linktree-card-header">
+            <div class="linktree-title">
+                <i class="fas fa-tree"></i>
+                <span data-i18n="linktree.linktree2">Linktree #2</span>
+            </div>
+            <div class="linktree-status" id="status-2">
+                <span class="status-badge inactive" data-i18n="linktree.inactive">Inactive</span>
+            </div>
+        </div>
+        
+        <div class="linktree-card-body">
+            <div class="linktree-preview" id="preview-2">
+                <div class="preview-placeholder">
+                    <i class="fas fa-plus-circle"></i>
+                    <p data-i18n="linktree.createSecondLinktree">Create your second linktree</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="linktree-card-footer">
+            <button class="btn btn-outline btn-sm" id="edit-2">
+                <i class="fas fa-edit"></i>
+                <span data-i18n="common.edit">Edit</span>
+            </button>
+            <button class="btn btn-success btn-sm" id="preview-2-btn">
+                <i class="fas fa-eye"></i>
+                <span data-i18n="common.preview">Preview</span>
+            </button>
+            <button class="btn btn-primary btn-sm copy-link-btn" id="copy-2" data-url="" disabled>
+                <i class="fas fa-copy"></i>
+                <span data-i18n="linktree.copyLink">Copy Link</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Linktree 3 -->
+    <div class="linktree-card" data-tree-id="3">
+        <div class="linktree-card-header">
+            <div class="linktree-title">
+                <i class="fas fa-tree"></i>
+                <span data-i18n="linktree.linktree3">Linktree #3</span>
+            </div>
+            <div class="linktree-status" id="status-3">
+                <span class="status-badge inactive" data-i18n="linktree.inactive">Inactive</span>
+            </div>
+        </div>
+        
+        <div class="linktree-card-body">
+            <div class="linktree-preview" id="preview-3">
+                <div class="preview-placeholder">
+                    <i class="fas fa-plus-circle"></i>
+                    <p data-i18n="linktree.createThirdLinktree">Create your third linktree</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="linktree-card-footer">
+            <button class="btn btn-outline btn-sm" id="edit-3">
+                <i class="fas fa-edit"></i>
+                <span data-i18n="common.edit">Edit</span>
+            </button>
+            <button class="btn btn-success btn-sm" id="preview-3-btn">
+                <i class="fas fa-eye"></i>
+                <span data-i18n="common.preview">Preview</span>
+            </button>
+            <button class="btn btn-primary btn-sm copy-link-btn" id="copy-3" data-url="" disabled>
+                <i class="fas fa-copy"></i>
+                <span data-i18n="linktree.copyLink">Copy Link</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="modal-backdrop" id="edit-linktree-modal">
+    <div class="modal linktree-modal">
+        <div class="modal-header">
+            <h3 class="modal-title" data-i18n="linktree.editLinktree">Edit Linktree</h3>
+            <button class="modal-close" id="close-edit-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <div class="form-label" data-i18n="linktree.firstName">First Name</div>
+                <input type="text" class="form-control" id="first-name" data-i18n-placeholder="linktree.firstNamePlaceholder" placeholder="Jonathan">
+            </div>
+            
+            <div class="form-group">
+                <div class="form-label" data-i18n="linktree.lastName">Last Name</div>
+                <input type="text" class="form-control" id="last-name" data-i18n-placeholder="linktree.lastNamePlaceholder" placeholder="Bacheter">
+            </div>
+            
+            <div class="form-group">
+                <div class="form-label" data-i18n="linktree.headerTagline">Header/Tagline</div>
+                <input type="text" class="form-control" id="header" data-i18n-placeholder="linktree.headerPlaceholder" placeholder="3D Artist | Lead | Senior">
+            </div>
+            
+            <div class="form-group">
+                <div class="form-label" data-i18n="linktree.jobTitles">Job Titles</div>
+                <textarea class="form-control" id="job-titles" data-i18n-placeholder="linktree.jobTitlesPlaceholder" placeholder="Modeler | Environment Artist | VFX Supervisor" rows="3"></textarea>
+                <small class="form-help" data-i18n="linktree.jobTitlesHelp">Separate multiple titles with | (pipe)</small>
+            </div>
+            
+            <div class="form-group">
+                <div class="form-label" data-i18n="linktree.email">Email</div>
+                <input type="email" class="form-control" id="linktree-email" data-i18n-placeholder="linktree.emailPlaceholder" placeholder="your.email@example.com">
+                <small class="form-help" data-i18n="linktree.emailHelp">Will be displayed as a mailto link under your job titles</small>
+            </div>
+            
+            <div class="form-group">
+                <div class="form-label" data-i18n="linktree.links">Links</div>
+                <div id="links-container">
+                    <!-- Links will be added dynamically -->
+                </div>
+                <button type="button" class="btn btn-outline btn-sm" id="add-link-btn">
+                    <i class="fas fa-plus"></i>
+                    <span data-i18n="linktree.addLink">Add Link</span>
+                </button>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-danger" id="clear-linktree" style="margin-right: auto;">
+                <i class="fas fa-trash"></i>
+                <span data-i18n="linktree.clear">Clear</span>
+            </button>
+            <button class="btn btn-outline" id="cancel-edit" data-i18n="common.cancel">Cancel</button>
+            <button class="btn btn-primary" id="save-linktree">
+                <i class="fas fa-save"></i>
+                <span data-i18n="common.save">Save</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Preview Modal -->
+<div class="modal-backdrop" id="preview-modal">
+    <div class="modal preview-modal">
+        <div class="modal-header">
+            <h3 class="modal-title" data-i18n="linktree.linktreePreview">Linktree Preview</h3>
+            <button class="modal-close" id="close-preview-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div id="preview-container">
+                <!-- Preview will be generated here -->
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" id="open-in-tab">
+                <i class="fas fa-external-link-alt"></i>
+                <span data-i18n="linktree.openInNewTab">Open in New Tab</span>
+            </button>
+            <button class="btn btn-outline" id="close-preview" data-i18n="common.close">Close</button>
+        </div>
+    </div>
+</div>
+
+<!-- Clear Linktree Confirmation Modal -->
+<div class="modal-backdrop" id="clear-linktree-confirm-modal">
+    <div class="modal elegant-confirm" style="max-width: 400px;">
+        <div class="modal-header">
+            <h3 class="modal-title" data-i18n="linktree.clearLinktree">Clear Linktree</h3>
+            <button class="modal-close" id="close-clear-linktree-confirm-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div style="text-align: center; margin-bottom: var(--space-lg);">
+                <div class="confirm-icon" style="margin-bottom: var(--space-md);">
+                    <i class="fas fa-trash" style="font-size: 3rem; color: var(--danger);"></i>
+                </div>
+                <p style="font-size: 1.1rem; margin-bottom: var(--space-sm); color: var(--text-primary);" data-i18n="linktree.clearConfirmMessage">Are you sure you want to clear this linktree?</p>
+                <p style="color: var(--text-secondary); font-size: 0.9rem;" data-i18n="linktree.clearWarningMessage">This action will remove all data including name, job titles, email, and links.</p>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline cancel-btn" id="cancel-clear-linktree-confirmation" data-i18n="common.cancel">Cancel</button>
+            <button class="btn btn-danger confirm-btn" id="confirm-clear-linktree">
+                <i class="fas fa-trash"></i> <span data-i18n="linktree.clearLinktree">Clear Linktree</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Link Template (Hidden) -->
+<div id="link-template" style="display: none;">
+    <div class="link-item">
+        <div class="form-row">
+            <div class="form-col">
+                <input type="text" class="form-control link-title" data-i18n-placeholder="linktree.linkTitlePlaceholder" placeholder="Link Title (e.g., LinkedIn)">
+            </div>
+            <div class="form-col">
+                <input type="url" class="form-control link-url" data-i18n-placeholder="linktree.linkUrlPlaceholder" placeholder="https://example.com">
+            </div>
+            <div class="form-col-auto">
+                <select class="form-control link-icon">
+                    <option value="fas fa-globe" data-i18n="linktree.iconWebsite">🌐 Website</option>
+                    <option value="fab fa-linkedin" data-i18n="linktree.iconLinkedin">💼 LinkedIn</option>
+                    <option value="fab fa-github" data-i18n="linktree.iconGithub">🐙 GitHub</option>
+                    <option value="fab fa-behance" data-i18n="linktree.iconBehance">🎨 Behance</option>
+                    <option value="fab fa-dribbble" data-i18n="linktree.iconDribbble">🏀 Dribbble</option>
+                    <option value="fab fa-vimeo" data-i18n="linktree.iconVimeo">📹 Vimeo</option>
+                    <option value="fab fa-youtube" data-i18n="linktree.iconYoutube">📺 YouTube</option>
+                    <option value="fab fa-instagram" data-i18n="linktree.iconInstagram">📷 Instagram</option>
+                    <option value="fab fa-twitter" data-i18n="linktree.iconTwitter">🐦 Twitter</option>
+                    <option value="fas fa-folder-open" data-i18n="linktree.iconPortfolio">📁 Portfolio</option>
+                    <option value="fas fa-file-video" data-i18n="linktree.iconShowreel">🎬 Showreel</option>
+                    <option value="fas fa-film" data-i18n="linktree.iconImdb">🎭 IMDb</option>
+                    <option value="fas fa-palette" data-i18n="linktree.iconArtstation">🎨 Artstation</option>
+                    <option value="fas fa-envelope" data-i18n="linktree.iconEmail">✉️ Email</option>
+                    <option value="fas fa-link" data-i18n="linktree.iconOther">🔗 Other</option>
+                </select>
+                <div class="icon-preview-container">
+                    <i class="icon-preview fas fa-globe"></i>
+                </div>
+            </div>
+            <div class="form-col-auto">
+                <button type="button" class="btn btn-danger btn-sm remove-link">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Linktree specific styles */
+/* Linktree specific styles */
+.linktree-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: var(--space-lg);
+    margin-top: var(--space-lg);
+}
+
+.linktree-card {
+    background: var(--surface-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    transition: all var(--transition);
+    position: relative;
+}
+
+.linktree-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+}
+
+.linktree-card-header {
+    padding: var(--space-md);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.linktree-title {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    font-weight: 600;
+}
+
+.linktree-title i {
+    color: var(--primary);
+}
+
+.status-badge {
+    padding: 4px 12px;
+    border-radius: var(--radius-full);
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.status-badge.active {
+    background: rgba(0, 228, 161, 0.2);
+    color: var(--success);
+}
+
+.status-badge.inactive {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-muted);
+}
+
+.linktree-card-body {
+    padding: var(--space-lg);
+    min-height: 200px;
+}
+
+.linktree-preview {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.preview-placeholder {
+    text-align: center;
+    color: var(--text-muted);
+}
+
+.preview-placeholder i {
+    font-size: 3rem;
+    margin-bottom: var(--space-md);
+    opacity: 0.5;
+}
+
+.preview-content {
+    text-align: center;
+    width: 100%;
+}
+
+.preview-name {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: var(--space-xs);
+}
+
+.preview-header {
+    color: var(--text-secondary);
+    margin-bottom: var(--space-sm);
+}
+
+.preview-jobs {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-bottom: var(--space-md);
+}
+
+.preview-email {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-bottom: var(--space-md);
+}
+
+.preview-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-sm);
+}
+
+.preview-link {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--gradient-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-decoration: none;
+    transition: all var(--transition);
+}
+
+.preview-link:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 15px rgba(79, 109, 245, 0.4);
+}
+
+.linktree-card-footer {
+    padding: var(--space-md);
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    gap: var(--space-sm);
+}
+
+.link-item {
+    margin-bottom: var(--space-md);
+    padding: var(--space-md);
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: var(--radius);
+    border: 1px solid var(--border-color);
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto auto;
+    gap: var(--space-sm);
+    align-items: center;
+}
+
+.form-col {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-col-auto {
+    display: flex;
+    align-items: end;
+    gap: var(--space-xs);
+}
+
+.icon-preview-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: var(--surface-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+}
+
+.icon-preview {
+    color: var(--primary);
+    font-size: 1.2rem;
+}
+
+.form-help {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-top: var(--space-xs);
+}
+
+.btn-sm {
+    padding: 6px 12px;
+    font-size: 0.875rem;
+}
+
+.copy-link-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Modal centering and sizing fixes - COMPLETELY INDEPENDENT */
+.modal-backdrop {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    z-index: 9999 !important;
+    overflow-y: auto;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.modal-backdrop.show {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal {
+    position: relative !important;
+    margin: 0 auto;
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-xl);
+    border: 1px solid var(--border-color);
+    max-height: 90vh;
+    overflow: hidden;
+    transform: none !important;
+}
+
+.linktree-modal {
+    max-width: 700px;
+    width: 100%;
+    max-width: min(700px, calc(100vw - 40px));
+    display: flex;
+    flex-direction: column;
+}
+
+.preview-modal {
+    max-width: 400px;
+    width: 100%;
+    max-width: min(400px, calc(100vw - 40px));
+}
+
+.modal-header {
+    padding: var(--space-lg);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.modal-body {
+    padding: var(--space-lg);
+    overflow-y: auto;
+    flex: 1;
+    min-height: 0;
+}
+
+.modal-footer {
+    padding: var(--space-lg);
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    gap: var(--space-sm);
+    justify-content: flex-end;
+    flex-shrink: 0;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius);
+    transition: all var(--transition);
+}
+
+.modal-close:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+}
+
+.preview-modal .modal-body {
+    padding: 0;
+}
+
+#preview-container {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Prevent body scroll when modal is open */
+body.modal-open {
+    overflow: hidden !important;
+    position: fixed !important;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* Responsive modal */
+@media (max-width: 768px) {
+    .modal-backdrop {
+        padding: 10px;
+    }
+
+    .linktree-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .linktree-modal {
+        max-width: calc(100vw - 20px);
+    }
+    
+    .preview-modal {
+        max-width: calc(100vw - 20px);
+    }
+    
+    .modal-body {
+        max-height: 70vh;
+    }
+
+    .linktree-card-footer {
+        flex-direction: column;
+    }
+    
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: var(--space-xs);
+    }
+    
+    .form-col-auto {
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+</style>

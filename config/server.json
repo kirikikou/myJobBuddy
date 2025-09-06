@@ -1,0 +1,6 @@
+{
+    "maxJsonBody": "5mb",
+    "maxUploadSize": "10mb",
+    "sessionTimeout": 86400000,
+    "requestTimeout": 120000
+  }

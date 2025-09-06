@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyJobBuddy - System Monitoring</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/date-fns@2.29.3/index.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .status-bar {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #28a745;
+        }
+        
+        .status-item.warning {
+            border-left-color: #ffc107;
+        }
+        
+        .status-item.error {
+            border-left-color: #dc3545;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .card h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .metric {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .metric:last-child {
+            border-bottom: none;
+        }
+        
+        .metric-value {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .metric-value.success {
+            color: #28a745;
+        }
+        
+        .metric-value.warning {
+            color: #ffc107;
+        }
+        
+        .metric-value.error {
+            color: #dc3545;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin-top: 10px;
+        }
+        
+        .chart-container.small {
+            height: 200px;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.7);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .tab.active {
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        }
+        
+        .table-container {
+            max-height: 800px;
+            overflow-y: auto;
+        }
+        
+        #domains-tab .table-container {
+            max-height: 900px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 8px 12px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        th {
+            background: #f8f9fa;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+        
+        tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #28a745, #20c997);
+            transition: width 0.3s ease;
+        }
+        
+        .progress-fill.warning {
+            background: linear-gradient(90deg, #ffc107, #fd7e14);
+        }
+        
+        .progress-fill.error {
+            background: linear-gradient(90deg, #dc3545, #e83e8c);
+        }
+        
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+        
+        .btn-primary {
+            background: #007bff;
+            color: white;
+        }
+        
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+        
+        .btn-warning {
+            background: #ffc107;
+            color: #212529;
+        }
+        
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .alert {
+            padding: 12px 16px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+        
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .alert-warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .view-all-btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+        
+        .view-all-btn:hover {
+            background: #0056b3;
+        }
+        
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .status-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .controls {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 MyJobBuddy System Monitoring</h1>
+            <div class="status-bar">
+                <div class="status-item" id="system-status">
+                    <span>🟢</span>
+                    <span>System: <span id="system-health">Loading...</span></span>
+                </div>
+                <div class="status-item" id="memory-status">
+                    <span>💾</span>
+                    <span>Memory: <span id="memory-usage">0%</span></span>
+                </div>
+                <div class="status-item" id="cpu-status">
+                    <span>⚡</span>
+                    <span>CPU: <span id="cpu-usage">0%</span></span>
+                </div>
+                <div class="status-item" id="users-status">
+                    <span>👥</span>
+                    <span>Users: <span id="active-users">0</span></span>
+                </div>
+                <div class="status-item" id="queue-status">
+                    <span>📋</span>
+                    <span>Queue: <span id="queue-length">0</span></span>
+                </div>
+                <div class="status-item">
+                    <span>🕒</span>
+                    <span>Last Update: <span id="last-update">Never</span></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="btn btn-primary" onclick="refreshData()">🔄 Refresh</button>
+            <button class="btn btn-success" onclick="optimizeSystem()">🔧 Optimize</button>
+            <button class="btn btn-warning" onclick="exportData('json')">📊 Export JSON</button>
+            <button class="btn btn-warning" onclick="exportData('csv')">📊 Export CSV</button>
+            <button class="btn btn-danger" onclick="clearHistory()">🗑️ Clear History</button>
+            <button class="btn btn-primary" onclick="window.open('/monitoring/detailed.html', '_blank')">📋 Detailed View</button>
+            <label>
+                Auto-refresh: 
+                <input type="checkbox" id="auto-refresh" checked onchange="toggleAutoRefresh()">
+            </label>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('overview')">📊 Overview</button>
+            <button class="tab" onclick="showTab('performance')">⚡ Performance</button>
+            <button class="tab" onclick="showTab('domains')">🌐 Domains</button>
+            <button class="tab" onclick="showTab('users')">👥 Users</button>
+            <button class="tab" onclick="showTab('system')">🖥️ System</button>
+            <a href="/monitoring/batch-analysis.html" class="tab" style="text-decoration: none; color: inherit;">🔥 Batch Analysis</a>
+            <a href="/monitoring/historical.html" class="tab" style="text-decoration: none; color: inherit;">📈 Historical</a>
+        </div>
+
+        <div id="alert-container"></div>
+
+        <div id="overview-tab" class="tab-content">
+            <div class="grid">
+                <div class="card">
+                    <h3>📈 Real-time Metrics</h3>
+                    <div class="metric">
+                        <span>Active Requests</span>
+                        <span class="metric-value" id="active-requests">0</span>
+                    </div>
+                    <div class="metric">
+                        <span>Requests/Minute</span>
+                        <span class="metric-value" id="requests-minute">0</span>
+                    </div>
+                    <div class="metric">
+                        <span>Requests/Hour</span>
+                        <span class="metric-value" id="requests-hour">0</span>
+                    </div>
+                    <div class="metric">
+                        <span>Active Domains</span>
+                        <span class="metric-value" id="active-domains">0</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🏆 Top Domains</h3>
+                    <div id="top-domains-list">Loading...</div>
+                    <button class="view-all-btn" onclick="showTab('domains')">View All Domains</button>
+                </div>
+
+                <div class="card">
+                    <h3>👑 Top Users</h3>
+                    <div id="top-users-list">Loading...</div>
+                    <button class="view-all-btn" onclick="showTab('users')">View All Users</button>
+                </div>
+
+                <div class="card">
+                    <h3>💼 Top Job Titles</h3>
+                    <div id="top-jobtitles-list">Loading...</div>
+                    <button class="view-all-btn" onclick="window.open('/monitoring/detailed.html#jobtitles', '_blank')">View All Job Titles</button>
+                </div>
+            </div>
+
+            <div class="grid">
+                <div class="card">
+                    <h3>📊 Requests Over Time</h3>
+                    <div class="chart-container">
+                        <canvas id="requests-chart"></canvas>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>💾 Memory Usage</h3>
+                    <div class="chart-container">
+                        <canvas id="memory-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="performance-tab" class="tab-content" style="display: none;">
+            <div class="grid">
+                <div class="card">
+                    <h3>⚡ Step Performance</h3>
+                    <div class="table-container">
+                        <table id="steps-table">
+                            <thead>
+                                <tr>
+                                    <th>Step</th>
+                                    <th>Calls</th>
+                                    <th>Avg Time</th>
+                                    <th>Success Rate</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📦 Recent Batches</h3>
+                    <div class="table-container">
+                        <table id="batches-table">
+                            <thead>
+                                <tr>
+                                    <th>Batch ID</th>
+                                    <th>Domains</th>
+                                    <th>Duration</th>
+                                    <th>Strategy</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="domains-tab" class="tab-content" style="display: none;">
+            <div class="card">
+                <h3>🌐 Domain Statistics</h3>
+                <div class="controls">
+                    <select id="domain-sort" onchange="loadDomains()">
+                        <option value="requests">Sort by Requests</option>
+                        <option value="time">Sort by Time</option>
+                        <option value="success">Sort by Success Rate</option>
+                        <option value="recent">Sort by Recent</option>
+                    </select>
+                    <select id="domain-period" onchange="loadDomains()">
+                        <option value="all">All Time</option>
+                        <option value="today">Today</option>
+                        <option value="week">This Week</option>
+                        <option value="month">This Month</option>
+                    </select>
+                    <input type="text" id="domain-filter" placeholder="Filter domains..." onkeyup="loadDomains()" style="padding: 6px; border: 1px solid #ccc; border-radius: 4px;">
+                </div>
+                <div class="table-container">
+                    <table id="domains-table">
+                        <thead>
+                            <tr>
+                                <th>Domain</th>
+                                <th>Requests</th>
+                                <th>Avg Time</th>
+                                <th>Success Rate</th>
+                                <th>Last Step</th>
+                                <th>Users</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="users-tab" class="tab-content" style="display: none;">
+            <div class="grid">
+                <div class="card">
+                    <h3>📊 User Plans Distribution</h3>
+                    <div class="chart-container small">
+                        <canvas id="plans-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h3>👥 User Statistics</h3>
+                <div class="controls">
+                    <select id="user-sort" onchange="loadUsers()">
+                        <option value="requests">Sort by Requests</option>
+                        <option value="domains">Sort by Domains</option>
+                        <option value="recent">Sort by Recent</option>
+                    </select>
+                    <select id="user-plan" onchange="loadUsers()">
+                        <option value="all">All Plans</option>
+                        <option value="free">Free</option>
+                        <option value="pro">Pro</option>
+                        <option value="premium">Premium</option>
+                    </select>
+                </div>
+                <div class="table-container">
+                    <table id="users-table">
+                        <thead>
+                            <tr>
+                                <th>User ID</th>
+                                <th>Plan</th>
+                                <th>Requests</th>
+                                <th>Domains</th>
+                                <th>Last Activity</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="system-tab" class="tab-content" style="display: none;">
+            <div class="grid">
+                <div class="card">
+                    <h3>🖥️ System Health</h3>
+                    <div id="system-health-details">Loading...</div>
+                </div>
+
+                <div class="card">
+                    <h3>🔧 Resource Monitor</h3>
+                    <div id="resource-details">Loading...</div>
+                </div>
+
+                <div class="card">
+                    <h3>📋 Queue Status</h3>
+                    <div id="queue-details">Loading...</div>
+                </div>
+
+                <div class="card">
+                    <h3>💡 Recommendations</h3>
+                    <div id="recommendations">Loading...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let refreshInterval;
+        let autoRefreshEnabled = true;
+        let charts = {};
+
+        async function init() {
+            await refreshData();
+            initCharts();
+            startAutoRefresh();
+        }
+
+        function initCharts() {
+            const ctx1 = document.getElementById('requests-chart').getContext('2d');
+            charts.requests = new Chart(ctx1, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Requests',
+                        data: [],
+                        borderColor: '#007bff',
+                        backgroundColor: 'rgba(0,123,255,0.1)',
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+
+            const ctx2 = document.getElementById('memory-chart').getContext('2d');
+            charts.memory = new Chart(ctx2, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Memory %',
+                        data: [],
+                        borderColor: '#28a745',
+                        backgroundColor: 'rgba(40,167,69,0.1)',
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { beginAtZero: true, max: 100 }
+                    }
+                }
+            });
+        }
+
+        async function refreshData() {
+            try {
+                showAlert('Refreshing data...', 'info');
+                
+                const [overview, realtime, performance] = await Promise.all([
+                    fetch('/monitoring/api/overview').then(r => r.json()),
+                    fetch('/monitoring/api/realtime').then(r => r.json()),
+                    fetch('/monitoring/api/performance').then(r => r.json())
+                ]);
+
+                updateStatusBar(realtime.data);
+                updateOverview(overview.data);
+                updatePerformance(performance.data);
+                updateCharts(realtime.data);
+                
+                document.getElementById('last-update').textContent = new Date().toLocaleTimeString();
+                clearAlerts();
+                
+            } catch (error) {
+                console.error('Failed to refresh data:', error);
+                showAlert('Failed to refresh data: ' + error.message, 'error');
+            }
+        }
+
+        function updateStatusBar(data) {
+            const metrics = data.metrics;
+            
+            document.getElementById('memory-usage').textContent = metrics.memory.percentage + '%';
+            document.getElementById('cpu-usage').textContent = metrics.cpu.percentage + '%';
+            document.getElementById('active-users').textContent = metrics.activeUsers;
+            document.getElementById('queue-length').textContent = metrics.queueLength;
+            
+            updateStatusItem('memory-status', metrics.memory.percentage, [70, 90]);
+            updateStatusItem('cpu-status', metrics.cpu.percentage, [70, 90]);
+            updateStatusItem('queue-status', metrics.queueLength, [20, 50]);
+        }
+
+        function updateStatusItem(elementId, value, thresholds) {
+            const element = document.getElementById(elementId);
+            element.className = 'status-item';
+            
+            if (value > thresholds[1]) {
+                element.classList.add('error');
+            } else if (value > thresholds[0]) {
+                element.classList.add('warning');
+            }
+        }
+
+        function updateOverview(data) {
+            document.getElementById('active-requests').textContent = data.realtime.requests.current;
+            document.getElementById('requests-minute').textContent = data.realtime.requests.lastMinute;
+            document.getElementById('requests-hour').textContent = data.realtime.requests.lastHour;
+            document.getElementById('active-domains').textContent = data.realtime.activeDomains;
+
+            updateTopList('top-domains-list', data.top.domains, (item) => 
+                `<div class="metric"><span>${item.domain}</span><span class="metric-value">${item.requests}</span></div>`
+            );
+
+            updateTopList('top-users-list', data.top.users, (item) => 
+                `<div class="metric"><span>${item.userId}</span><span class="metric-value">${item.requests}</span></div>`
+            );
+
+            updateTopList('top-jobtitles-list', data.top.jobTitles, (item) => 
+                `<div class="metric"><span>${item.title}</span><span class="metric-value">${item.count}</span></div>`
+            );
+        }
+
+        function updateTopList(elementId, items, formatter) {
+            const element = document.getElementById(elementId);
+            element.innerHTML = items.slice(0, 5).map(formatter).join('');
+        }
+
+        async function loadSystemDetails() {
+            try {
+                const response = await fetch('/monitoring/api/system-health');
+                const data = await response.json();
+                
+                if (data.success) {
+                    updateSystemHealth(data.data);
+                }
+            } catch (error) {
+                console.error('Failed to load system details:', error);
+                document.getElementById('system-health-details').innerHTML = 
+                    '<p class="status-error">❌ Failed to load system health data</p>';
+                document.getElementById('resource-details').innerHTML = 
+                    '<p class="status-error">❌ Failed to load resource data</p>';
+                document.getElementById('queue-details').innerHTML = 
+                    '<p class="status-error">❌ Failed to load queue data</p>';
+                document.getElementById('recommendations').innerHTML = 
+                    '<p class="status-error">❌ Failed to load recommendations</p>';
+            }
+        }
+
+        function updateSystemHealth(data) {
+            const systemHealth = `
+                <div class="metric">
+                    <span>Overall Health Score</span>
+                    <span class="metric-value ${getHealthClass(data.overall.healthScore)}">${Math.round(data.overall.healthScore * 100)}%</span>
+                </div>
+                <div class="metric">
+                    <span>System Status</span>
+                    <span class="metric-value status-good">${data.overall.status}</span>
+                </div>
+                <div class="metric">
+                    <span>Uptime</span>
+                    <span class="metric-value">${Math.round(data.detailed.uptime.process / 3600)}h</span>
+                </div>
+                <div class="metric">
+                    <span>Node Version</span>
+                    <span class="metric-value">${data.detailed.platform.version}</span>
+                </div>
+            `;
+            document.getElementById('system-health-details').innerHTML = systemHealth;
+
+            const resourceDetails = `
+                <div class="metric">
+                    <span>Current CPU</span>
+                    <span class="metric-value ${data.resources.current.cpu > 70 ? 'status-warning' : 'status-good'}">${data.resources.current.cpu}%</span>
+                </div>
+                <div class="metric">
+                    <span>Current Memory</span>
+                    <span class="metric-value ${data.resources.current.ram > 6 ? 'status-warning' : 'status-good'}">${data.resources.current.ram.toFixed(1)}GB</span>
+                </div>
+                <div class="metric">
+                    <span>Available CPU</span>
+                    <span class="metric-value">${Math.round(data.resources.available.cpu * 100)}%</span>
+                </div>
+                <div class="metric">
+                    <span>Available Workers</span>
+                    <span class="metric-value">${data.resources.available.workers}</span>
+                </div>
+            `;
+            document.getElementById('resource-details').innerHTML = resourceDetails;
+
+            const queueDetails = `
+                <div class="metric">
+                    <span>Server Queue Length</span>
+                    <span class="metric-value">${data.queues.queues.server.length}</span>
+                </div>
+                <div class="metric">
+                    <span>Server Capacity</span>
+                    <span class="metric-value">${data.queues.queues.server.capacity}</span>
+                </div>
+                <div class="metric">
+                    <span>Estimated Wait Time</span>
+                    <span class="metric-value">${data.queues.queues.server.estimatedWaitTime.toFixed(1)}min</span>
+                </div>
+                <div class="metric">
+                    <span>AWS Queue Length</span>
+                    <span class="metric-value">${data.queues.queues.aws.length}</span>
+                </div>
+            `;
+            document.getElementById('queue-details').innerHTML = queueDetails;
+
+            let recommendationsHtml = '';
+            if (data.recommendations && data.recommendations.length > 0) {
+                recommendationsHtml = data.recommendations.map(rec => `
+                    <div class="alert alert-${rec.priority === 'high' ? 'error' : rec.priority === 'medium' ? 'warning' : 'success'}">
+                        <strong>${rec.type.toUpperCase()}</strong>: ${rec.message}
+                    </div>
+                `).join('');
+            } else {
+                recommendationsHtml = '<div class="alert alert-success"><strong>SYSTEM</strong>: All systems operating normally</div>';
+            }
+            document.getElementById('recommendations').innerHTML = recommendationsHtml;
+        }
+
+        function getHealthClass(score) {
+            if (score > 0.8) return 'status-good';
+            if (score > 0.6) return 'status-warning';
+            return 'status-error';
+        }
+
+        function updatePerformance(data) {
+            updateTable('steps-table', data.steps, [
+                'step', 'calls', 'avgTime', 'successRate'
+            ]);
+
+            updateTable('batches-table', data.batches, [
+                'batchId', 'domains', 'duration', 'strategy'
+            ]);
+        }
+
+        function updateTable(tableId, data, columns) {
+            const tbody = document.querySelector(`#${tableId} tbody`);
+            tbody.innerHTML = data.map(row => 
+                `<tr>${columns.map(col => `<td>${row[col] || 'N/A'}</td>`).join('')}</tr>`
+            ).join('');
+        }
+
+        function updateCharts(data) {
+            const now = new Date().toLocaleTimeString();
+            
+            if (charts.requests) {
+                charts.requests.data.labels.push(now);
+                charts.requests.data.datasets[0].data.push(data.metrics.requests.current);
+                
+                if (charts.requests.data.labels.length > 20) {
+                    charts.requests.data.labels.shift();
+                    charts.requests.data.datasets[0].data.shift();
+                }
+                
+                charts.requests.update();
+            }
+
+            if (charts.memory) {
+                charts.memory.data.labels.push(now);
+                charts.memory.data.datasets[0].data.push(data.metrics.memory.percentage);
+                
+                if (charts.memory.data.labels.length > 20) {
+                    charts.memory.data.labels.shift();
+                    charts.memory.data.datasets[0].data.shift();
+                }
+                
+                charts.memory.update();
+            }
+        }
+
+        async function loadDomains() {
+            const sort = document.getElementById('domain-sort').value;
+            const period = document.getElementById('domain-period').value;
+            const filter = document.getElementById('domain-filter')?.value || '';
+            
+            try {
+                const response = await fetch(`/monitoring/api/domains?sort=${sort}&period=${period}&limit=200&filter=${encodeURIComponent(filter)}`);
+                const data = await response.json();
+                
+                updateTable('domains-table', data.data.domains, [
+                    'domain', 'totalRequests', 'avgTime', 'successRate', 'lastStep', 'uniqueUsers'
+                ]);
+            } catch (error) {
+                showAlert('Failed to load domains: ' + error.message, 'error');
+            }
+        }
+
+        async function loadUsers() {
+            const sort = document.getElementById('user-sort').value;
+            const plan = document.getElementById('user-plan').value;
+            
+            try {
+                const response = await fetch(`/monitoring/api/users?sort=${sort}&plan=${plan}&limit=200`);
+                const data = await response.json();
+                
+                updateTable('users-table', data.data.users, [
+                    'userId', 'plan', 'totalRequests', 'totalDomains', 'lastActivity'
+                ]);
+
+                if (charts.plans) {
+                    charts.plans.destroy();
+                }
+
+                const ctx = document.getElementById('plans-chart').getContext('2d');
+                charts.plans = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: Object.keys(data.data.planDistribution),
+                        datasets: [{
+                            data: Object.values(data.data.planDistribution),
+                            backgroundColor: ['#28a745', '#007bff', '#ffc107']
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false
+                    }
+                });
+            } catch (error) {
+                showAlert('Failed to load users: ' + error.message, 'error');
+            }
+        }
+
+        function showTab(tabName) {
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.style.display = 'none');
+            
+            event.target.classList.add('active');
+            document.getElementById(tabName + '-tab').style.display = 'block';
+            
+            if (tabName === 'domains') loadDomains();
+            if (tabName === 'users') loadUsers();
+            if (tabName === 'system') loadSystemDetails();
+        }
+
+        function startAutoRefresh() {
+            if (refreshInterval) clearInterval(refreshInterval);
+            
+            if (autoRefreshEnabled) {
+                refreshInterval = setInterval(refreshData, 10000);
+            }
+        }
+
+        function toggleAutoRefresh() {
+            autoRefreshEnabled = document.getElementById('auto-refresh').checked;
+            startAutoRefresh();
+        }
+
+        async function optimizeSystem() {
+            try {
+                showAlert('Optimizing system...', 'info');
+                const response = await fetch('/monitoring/api/optimize', { method: 'POST' });
+                const data = await response.json();
+                
+                if (data.success) {
+                    showAlert('System optimized successfully', 'success');
+                    await refreshData();
+                } else {
+                    showAlert('Optimization failed: ' + data.error, 'error');
+                }
+            } catch (error) {
+                showAlert('Optimization failed: ' + error.message, 'error');
+            }
+        }
+
+        async function exportData(format) {
+            try {
+                window.open(`/monitoring/api/export/${format}?type=overview`, '_blank');
+                showAlert(`Data exported in ${format.toUpperCase()} format`, 'success');
+            } catch (error) {
+                showAlert('Export failed: ' + error.message, 'error');
+            }
+        }
+
+        async function clearHistory() {
+            if (!confirm('Are you sure you want to clear all history?')) return;
+            
+            try {
+                showAlert('Clearing history...', 'info');
+                const response = await fetch('/monitoring/api/clear-history?type=all', { method: 'DELETE' });
+                const data = await response.json();
+                
+                if (data.success) {
+                    showAlert('History cleared successfully', 'success');
+                    await refreshData();
+                } else {
+                    showAlert('Clear failed: ' + data.error, 'error');
+                }
+            } catch (error) {
+                showAlert('Clear failed: ' + error.message, 'error');
+            }
+        }
+
+        function showAlert(message, type) {
+            const alertContainer = document.getElementById('alert-container');
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type}`;
+            alert.textContent = message;
+            
+            alertContainer.appendChild(alert);
+            
+            if (type !== 'info') {
+                setTimeout(() => alert.remove(), 5000);
+            }
+        }
+
+        function clearAlerts() {
+            document.getElementById('alert-container').innerHTML = '';
+        }
+
+        window.addEventListener('load', init);
+    </script>
+</body>
+</html>

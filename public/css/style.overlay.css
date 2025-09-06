@@ -1,0 +1,126 @@
+/* ========== TOKENS (consomme ceux déjà définis dans :root) ========== */
+/* Aucun hardcode ici — ce fichier ne définit pas les valeurs, il utilise var(--...) */
+
+/* ========== RESET & BASE ========== */
+*{box-sizing:border-box}
+html,body{height:100%}
+body{color:var(--text-primary);background:var(--bg);font-family:var(--font-sans);line-height:1.5}
+a{color:inherit;text-decoration:none;transition:color var(--transition)}
+img,svg,video{display:block;max-width:100%;height:auto}
+button,input,select,textarea{font:inherit;color:inherit;background:none;border:none;outline:none}
+
+/* ========== TYPOGRAPHIE ========== */
+.h1,.h2,.h3,.h4,.h5,.h6{margin:0 0 .5rem 0;color:var(--text-primary);font-weight:700}
+.h1{font-size:clamp(1.6rem,3vw,2.4rem)}
+.h2{font-size:clamp(1.4rem,2.4vw,2rem)}
+.h3{font-size:clamp(1.2rem,2vw,1.6rem)}
+.muted{color:var(--text-muted)}
+.secondary{color:var(--text-secondary)}
+
+/* ========== LAYOUT (container, grid, stack) ========== */
+.container{width:min(1200px,100% - 2rem);margin-inline:auto}
+.stack{display:flex;gap:var(--space,12px);align-items:var(--align,stretch);justify-content:var(--justify,flex-start);flex-direction:var(--dir,column)}
+.grid{display:grid;gap:var(--gap,12px);grid-template-columns:repeat(var(--cols,12),1fr)}
+.section{padding:clamp(16px,2vw,32px);background:var(--surface);border:1px solid var(--border-color);border-radius:var(--radius);box-shadow:var(--shadow)}
+
+/* ========== CARDS ========== */
+.card{background:var(--surface-card);border:1px solid var(--border-color);border-radius:var(--radius);box-shadow:var(--shadow-card);transition:box-shadow var(--transition),transform var(--transition)}
+.card:hover{box-shadow:var(--shadow-hover);transform:translateY(-1px)}
+.card-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--border-color)}
+.card-body{padding:16px}
+.card-footer{padding:12px 16px;border-top:1px solid var(--border-color)}
+
+/* ========== BOUTONS (primaire, secondaire, ghost, danger, success) ========== */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 14px;border-radius:var(--radius-full);border:1px solid transparent;background:var(--primary);color:var(--on-primary, #fff);cursor:pointer;transition:transform var(--transition),box-shadow var(--transition),background var(--transition)}
+.btn:hover{transform:translateY(-1px);box-shadow:var(--shadow-hover)}
+.btn:disabled{opacity:.6;cursor:not-allowed;transform:none;box-shadow:none}
+.btn--secondary{background:var(--secondary);color:var(--on-secondary, #fff)}
+.btn--ghost{background:transparent;border-color:var(--border-color);color:var(--text-secondary)}
+.btn--ghost:hover{border-color:var(--border-hover);background:var(--surface-hover)}
+.btn--danger{background:var(--danger);color:var(--on-danger,#fff)}
+.btn--success{background:var(--success);color:var(--on-success,#0b1)}
+
+/* ========== CHIPS & BADGES ========== */
+.badge{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;background:var(--surface);border:1px solid var(--border-color);color:var(--text-secondary)}
+.badge--info{background:color-mix(in oklab,var(--info) 12%, transparent);border-color:color-mix(in oklab,var(--info) 30%, var(--border-color))}
+.badge--warn{background:color-mix(in oklab,var(--warning) 12%, transparent);border-color:color-mix(in oklab,var(--warning) 30%, var(--border-color))}
+.badge--ok{background:color-mix(in oklab,var(--success) 12%, transparent);border-color:color-mix(in oklab,var(--success) 30%, var(--border-color))}
+
+/* ========== FORMULAIRES (inputs, selects, textarea) ========== */
+.input, .select, .textarea{width:100%;padding:10px 12px;background:var(--surface);border:1px solid var(--border-color);border-radius:var(--radius);color:var(--text-primary);transition:border-color var(--transition),box-shadow var(--transition)}
+.input::placeholder,.textarea::placeholder{color:var(--text-muted)}
+.input:focus,.select:focus,.textarea:focus{border-color:var(--border-hover);box-shadow:0 0 0 3px color-mix(in oklab,var(--primary) 25%, transparent)}
+.field{display:grid;gap:6px}
+.field--row{display:flex;align-items:center;gap:8px}
+.label{font-weight:600;color:var(--text-secondary)}
+
+/* ========== TABLES ========== */
+.table{width:100%;border-collapse:separate;border-spacing:0 8px}
+.table thead th{font:600 0.9rem/1 var(--font-sans);color:var(--text-secondary);text-align:left;padding:8px 12px}
+.table tbody tr{background:var(--surface-card);border:1px solid var(--border-color)}
+.table tbody td{padding:10px 12px;border-top:1px solid var(--border-color)}
+.table tbody tr:hover{background:var(--surface-hover)}
+
+/* ========== NAV & SIDEBAR ========== */
+.nav{display:flex;gap:8px;align-items:center}
+.nav-item{display:flex;gap:8px;align-items:center;padding:8px 12px;border-radius:var(--radius-full);color:var(--text-secondary);transition:background var(--transition),color var(--transition)}
+.nav-item:hover{background:var(--surface-hover);color:var(--text-primary)}
+.nav-item--active{color:var(--text-primary);background:color-mix(in oklab,var(--primary) 12%, transparent)}
+.sidebar{width:var(--sidebar, 260px);background:var(--sidebar-bg);border-right:1px solid var(--border-color);display:flex;flex-direction:column;gap:8px;padding:12px}
+.sidebar .section{background:transparent;border:none;box-shadow:none;padding:0}
+
+/* ========== TOOLBAR / TOPBAR ========== */
+.topbar{height:var(--header-height);display:flex;align-items:center;justify-content:space-between;padding:0 12px;background:var(--surface-card);border-bottom:1px solid var(--border-color);position:sticky;top:0;z-index:20}
+
+/* ========== MODALS ========== */
+.modal{position:fixed;inset:0;display:grid;place-items:center;background:color-mix(in oklab,#000 45%, transparent);backdrop-filter:blur(4px);z-index:100}
+.modal__panel{width:min(720px,100% - 2rem);background:var(--surface-card);border:1px solid var(--border-color);border-radius:var(--radius-lg);box-shadow:var(--shadow-lg);overflow:hidden}
+.modal__header,.modal__footer{padding:12px 16px;border-bottom:1px solid var(--border-color)}
+.modal__footer{border-top:1px solid var(--border-color);border-bottom:none}
+.modal__body{padding:16px;max-height:70vh;overflow:auto}
+
+/* ========== TABS ========== */
+.tabs{display:flex;gap:8px;border-bottom:1px solid var(--border-color)}
+.tab{padding:10px 12px;border-radius:var(--radius) var(--radius) 0 0;color:var(--text-secondary);cursor:pointer;transition:background var(--transition),color var(--transition)}
+.tab:hover{background:var(--surface-hover);color:var(--text-primary)}
+.tab--active{color:var(--text-primary);background:var(--surface-card);border:1px solid var(--border-color);border-bottom-color:transparent}
+
+/* ========== ALERTS ========== */
+.alert{padding:12px 14px;border-radius:var(--radius);border:1px solid var(--border-color);background:var(--surface);color:var(--text-secondary)}
+.alert--info{border-color:color-mix(in oklab,var(--info) 40%, var(--border-color));background:color-mix(in oklab,var(--info) 12%, transparent)}
+.alert--warn{border-color:color-mix(in oklab,var(--warning) 40%, var(--border-color));background:color-mix(in oklab,var(--warning) 12%, transparent)}
+.alert--danger{border-color:color-mix(in oklab,var(--danger) 40%, var(--border-color));background:color-mix(in oklab,var(--danger) 12%, transparent)}
+
+/* ========== PROGRESS & LOADING ========== */
+.progress{height:8px;background:var(--surface);border-radius:999px;overflow:hidden;border:1px solid var(--border-color)}
+.progress__bar{height:100%;background:var(--primary);transition:width .4s ease}
+
+/* ========== UTILITAIRES (espacements, radius, surface) ========== */
+.p-0{padding:0}.p-1{padding:4px}.p-2{padding:8px}.p-3{padding:12px}.p-4{padding:16px}
+.mt-0{margin-top:0}.mt-1{margin-top:4px}.mt-2{margin-top:8px}.mt-3{margin-top:12px}.mt-4{margin-top:16px}
+.mb-0{margin-bottom:0}.mb-1{margin-bottom:4px}.mb-2{margin-bottom:8px}.mb-3{margin-bottom:12px}.mb-4{margin-bottom:16px}
+.round{border-radius:var(--radius)}.round-lg{border-radius:var(--radius-lg)}.round-full{border-radius:var(--radius-full)}
+.surface{background:var(--surface);border:1px solid var(--border-color)}
+.surface-hover:hover{background:var(--surface-hover)}
+.hidden{display:none!important}
+
+/* ========== TABLEAU KANBAN / TAGS (si utilisés) ========== */
+.tag{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;background:var(--surface-hover);border:1px solid var(--border-color);color:var(--text-secondary)}
+.tag .dot{width:8px;height:8px;border-radius:999px;background:currentColor}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 1024px){
+  .grid{grid-template-columns:repeat(var(--cols-md,8),1fr)}
+  .sidebar{width:var(--sidebar-md,220px)}
+}
+@media (max-width: 768px){
+  .grid{grid-template-columns:repeat(var(--cols-sm,4),1fr)}
+  .container{width:min(100%,100% - 1rem)}
+  .topbar{position:sticky}
+  .sidebar{position:fixed;inset:auto 0 0 0;height:var(--sidebar-h,56px);width:100%;display:flex;flex-direction:row;overflow:auto}
+}
+
+/* ========== THÈME FONCÉ / CLAIR (dépend de tes variables) ========== */
+.theme-dark body{background:var(--dark-bg)}
+.theme-dark .section,.theme-dark .card,.theme-dark .modal__panel{background:var(--dark-card)}
+.theme-dark .sidebar{background:var(--dark-sidebar)}

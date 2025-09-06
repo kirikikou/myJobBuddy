@@ -1,0 +1,366 @@
+<!-- email-search.html -->
+<div class="page-header">
+  <h2 class="page-title" data-i18n="emailSearch.title">Email Search</h2>
+</div>
+
+<!-- Email Search Status Bar -->
+<div class="email-search-status-bar" id="emailSearchStatusBar" style="display: none;">
+  <div class="status-info">
+    <span id="remainingEmailSearchesText" data-i18n="emailSearch.loadingLimits">Loading email search limits...</span>
+  </div>
+  <div class="status-actions">
+    <a href="/pricing" class="upgrade-link" style="display: none;">
+      <i class="fas fa-arrow-up"></i> <span data-i18n="emailSearch.upgradePlan">Upgrade Plan</span>
+    </a>
+  </div>
+</div>
+
+<!-- Search Form Card -->
+<div class="card search-card">
+  <div class="card-header">
+    <div class="card-title">
+      <i class="fas fa-envelope"></i>
+      <span data-i18n="emailSearch.emailDiscovery">Email Discovery</span>
+    </div>
+  </div>
+  <div class="card-body">
+    <!-- Domain Input -->
+    <div class="form-group">
+      <div class="career-header">
+        <div class="form-label" data-i18n="emailSearch.companyDomains">Company Domains</div>
+        <div class="career-controls">
+          <button class="btn-career-control" id="clearAllDomains" data-i18n-title="emailSearch.clearAllDomains" title="Clear all domains">
+            <i class="fas fa-trash"></i>
+          </button>
+        </div>
+      </div>
+      <div class="tag-input" id="domainsContainer">
+        <input class="form-control" type="text" id="domainInput" data-i18n-placeholder="emailSearch.domainPlaceholder" placeholder="Add domain (e.g., company.com) and press Enter or use commas to add multiple domains">
+      </div>
+      <div id="domainError" class="form-error"></div>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="search-progress" id="searchProgress" style="display: none;">
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      <div class="progress-text">
+        <span id="progressText" data-i18n="emailSearch.startingExploration">Starting exploration...</span>
+      </div>
+    </div>
+  </div>
+  
+  <div class="form-actions" style="text-align: right; margin-top: var(--space-lg);">
+    <button class="btn btn-secondary search-button" id="search-emails-cache-action" style="margin-right: 12px;">
+      <i class="fas fa-database"></i>
+      <span data-i18n="emailSearch.searchCacheOnly">Search Cache Only</span>
+    </button>
+    <button class="btn btn-primary search-button" id="start-discovery-action">
+      <i class="fas fa-search"></i>
+      <span data-i18n="emailSearch.startDiscovery">Start Email Discovery</span>
+    </button>
+  </div>
+</div>
+
+<!-- Results Section Card -->
+<div class="card results-card">
+  <div class="card-header">
+    <div class="card-title">
+      <i class="fas fa-inbox"></i>
+      <span data-i18n="emailSearch.discoveryResults">Discovery Results</span>
+    </div>
+    <div class="card-actions" style="display: flex; align-items: center; gap: 12px;">
+      <button class="btn btn-outline btn-sm" id="exportEmailResults" style="display: none;">
+        <i class="fas fa-download"></i> <span data-i18n="emailSearch.exportToCsv">Export to CSV</span>
+      </button>
+      <div id="resultsCount" style="font-size: 0.85rem; color: rgba(255,255,255,0.7);">
+        (<span>0</span> <span data-i18n="emailSearch.emailsFound">emails found</span>)
+      </div>
+    </div>
+  </div>
+  
+  <!-- Results Stats -->
+  <div class="results-stats" id="resultsStats" style="display: none; padding: var(--space-md) var(--space-lg); border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
+    <div class="stats-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: var(--space-md);">
+      <div class="stat-item">
+        <div class="stat-value" id="totalEmails">0</div>
+        <div class="stat-label" data-i18n="emailSearch.emailsFoundLabel">Emails Found</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value" id="totalDomains">0</div>
+        <div class="stat-label" data-i18n="emailSearch.domainsExplored">Domains Explored</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value" id="totalPages">0</div>
+        <div class="stat-label" data-i18n="emailSearch.pagesScanned">Pages Scanned</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value" id="contactPages">0</div>
+        <div class="stat-label" data-i18n="emailSearch.contactPages">Contact Pages</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Results Filters -->
+  <div class="results-filters" id="resultsFilters" style="display: none; padding: var(--space-md) var(--space-lg); border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
+    <div class="filter-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-sm);">
+      <div class="filter-title" style="font-size: 0.9rem; font-weight: 500; color: rgba(255, 255, 255, 0.8);">
+        <i class="fas fa-filter"></i> <span data-i18n="emailSearch.filterResults">Filter Results</span>
+      </div>
+      <button class="btn-career-control" id="clearAllFilters" data-i18n-title="emailSearch.clearAllFilters" title="Clear all filters">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="filter-controls" style="display: flex; gap: var(--space-md); flex-wrap: wrap; align-items: center;">
+      <div class="filter-group">
+        <input type="text" id="domainFilter" class="form-control" data-i18n-placeholder="emailSearch.filterByDomain" placeholder="Filter by domain..." style="width: 200px; padding: 6px 12px; font-size: 0.85rem;">
+      </div>
+      <div class="filter-group">
+        <input type="text" id="emailFilter" class="form-control" data-i18n-placeholder="emailSearch.filterByEmail" placeholder="Filter by email..." style="width: 200px; padding: 6px 12px; font-size: 0.85rem;">
+      </div>
+    </div>
+  </div>
+  
+  <div class="card-body">
+    <div class="loading" id="loadingIndicator" style="display: none;">
+      <i class="fas fa-spinner"></i>
+      <p data-i18n="emailSearch.discoveringEmails">Discovering email addresses...</p>
+    </div>
+    <div id="resultsContainer">
+      <p class="empty-state">
+        <i class="fas fa-envelope"></i>
+        <span data-i18n="emailSearch.emptyStateMessage">Add company domains and click "Start Email Discovery" to find email addresses.</span>
+      </p>
+    </div>
+  </div>
+</div>
+
+<style>
+/* Email Search Status Bar */
+.email-search-status-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.email-search-status-bar.free-plan {
+  border-color: rgba(108, 117, 125, 0.3);
+  background: rgba(108, 117, 125, 0.1);
+}
+
+.email-search-status-bar.standard-plan {
+  border-color: rgba(79, 109, 245, 0.3);
+  background: rgba(79, 109, 245, 0.1);
+}
+
+.email-search-status-bar.pro-plan {
+  border-color: rgba(141, 103, 247, 0.3);
+  background: rgba(141, 103, 247, 0.1);
+}
+
+.email-search-status-bar.limit-warning {
+  border-color: rgba(255, 193, 7, 0.5);
+  background: rgba(255, 193, 7, 0.1);
+  animation: pulse-warning 2s infinite;
+}
+
+.email-search-status-bar.limit-reached {
+  border-color: rgba(220, 53, 69, 0.5);
+  background: rgba(220, 53, 69, 0.1);
+  animation: pulse-danger 2s infinite;
+}
+
+.email-search-status-bar.cache-only {
+  border-color: rgba(255, 165, 0, 0.3);
+  background: rgba(255, 165, 0, 0.1);
+}
+
+.status-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.status-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.upgrade-link {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 500;
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--primary);
+  transition: all 0.2s ease;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.upgrade-link:hover {
+  background: var(--primary);
+  color: white;
+  transform: translateY(-1px);
+}
+
+@keyframes pulse-warning {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+@keyframes pulse-danger {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
+}
+
+/* Email Search Specific Styles */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: var(--space-md);
+}
+
+.stat-item {
+  text-align: center;
+  padding: var(--space-sm);
+}
+
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--primary);
+  margin-bottom: 4px;
+}
+
+.stat-label {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.email-result {
+  padding: var(--space-md);
+  margin-bottom: var(--space-sm);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius);
+  transition: all 0.3s ease;
+}
+
+.email-result:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+}
+
+.email-address {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.email-meta {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.copy-button {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.3s ease;
+}
+
+.copy-button:hover {
+  background: var(--primary-dark);
+  transform: translateY(-1px);
+}
+
+.domain-tag {
+  display: inline-flex;
+  align-items: center;
+  background: rgba(79, 109, 245, 0.1);
+  border: 1px solid rgba(79, 109, 245, 0.3);
+  color: var(--primary);
+  padding: 6px 12px;
+  margin: 4px;
+  border-radius: var(--radius);
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.domain-tag:hover {
+  background: rgba(79, 109, 245, 0.2);
+  border-color: rgba(79, 109, 245, 0.5);
+}
+
+.domain-tag button {
+  background: none;
+  border: none;
+  color: inherit;
+  margin-left: 8px;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+}
+
+.domain-tag button:hover {
+  color: var(--danger);
+}
+
+/* Loading animation */
+.loading i {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Form actions responsive */
+@media (max-width: 768px) {
+  .form-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .form-actions button {
+    width: 100%;
+  }
+  
+  .email-search-status-bar {
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+  }
+  
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+</style>

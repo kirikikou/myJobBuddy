@@ -1,0 +1,342 @@
+<div class="page-header">
+    <h1 class="page-title">
+        <i class="fas fa-file-alt"></i>
+        <span data-i18n="cvBuilder.title">CV Builder</span>
+    </h1>
+    <div class="header-actions">
+        <div class="cv-selector-group">
+            <select id="cvSelector" class="form-control cv-selector">
+                <option value="cv_1">CV 1</option>
+                <option value="cv_2">CV 2</option>
+                <option value="cv_3">CV 3</option>
+            </select>
+            <button id="cvModeToggle" class="btn btn-outline">
+                <i class="fas fa-envelope"></i>
+                <span data-i18n="cvBuilder.letterMode">Mode Lettre</span>
+            </button>
+        </div>
+        <div class="export-actions">
+            <button id="exportCV" class="btn btn-primary">
+                <i class="fas fa-download"></i>
+                <span data-i18n="common.export">Exporter</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="cv-builder-container">
+    <div class="cv-editor">
+        <div class="cv-section cv-section-expanded">
+            <h3><i class="fas fa-user"></i> <span data-i18n="cvBuilder.personalInformation">Personal Information</span></h3>
+            <div class="form-row">
+                <div class="form-group">
+                    <label data-i18n="profile.firstName">First Name</label>
+                    <input type="text" class="form-control" id="firstName" data-i18n-placeholder="cvBuilder.firstNamePlaceholder" placeholder="John">
+                </div>
+                <div class="form-group">
+                    <label data-i18n="profile.lastName">Last Name</label>
+                    <input type="text" class="form-control" id="lastName" data-i18n-placeholder="cvBuilder.lastNamePlaceholder" placeholder="Doe">
+                </div>
+            </div>
+            <div class="form-group">
+                <label data-i18n="cvBuilder.jobTitle">Job Title</label>
+                <input type="text" class="form-control" id="jobTitle" data-i18n-placeholder="cvBuilder.jobTitlePlaceholder" placeholder="Web Developer">
+            </div>
+            <div class="form-group">
+                <label data-i18n="cvBuilder.photo">Photo</label>
+                <div class="photo-upload-container">
+                    <input type="file" id="photoUpload" accept="image/*" style="display: none;">
+                    <button class="btn btn-outline photo-upload-btn" onclick="document.getElementById('photoUpload').click()">
+                        <i class="fas fa-camera"></i> <span data-i18n="cvBuilder.choosePhoto">Choose Photo</span>
+                    </button>
+                    <button id="removePhoto" class="btn btn-outline btn-danger" style="display: none;">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+                <div class="photo-size-control" style="margin-top: 10px; display: none;" id="photoSizeControl">
+                    <label data-i18n="cvBuilder.photoSize">Photo Size</label>
+                    <input type="range" id="photoSizeSlider" min="0" max="0.4" step="0.1" value="0">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label data-i18n="profile.location">Location</label>
+                    <input type="text" class="form-control" id="location" data-i18n-placeholder="cvBuilder.locationPlaceholder" placeholder="Paris, France">
+                </div>
+                <div class="form-group">
+                    <label data-i18n="profile.email">Email</label>
+                    <input type="email" class="form-control" id="email" data-i18n-placeholder="cvBuilder.emailPlaceholder" placeholder="john.doe@email.com">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label data-i18n="profile.phone">Phone</label>
+                    <input type="tel" class="form-control" id="phone" data-i18n-placeholder="cvBuilder.phonePlaceholder" placeholder="+33 6 12 34 56 78">
+                </div>
+                <div class="form-group">
+                    <label data-i18n="cvBuilder.drivingLicense">Driving License</label>
+                    <input type="text" class="form-control" id="drivingLicense" data-i18n-placeholder="cvBuilder.drivingLicensePlaceholder" placeholder="License B">
+                </div>
+            </div>
+            <div class="form-group">
+                <label data-i18n="cvBuilder.languages">Languages</label>
+                <input type="text" class="form-control" id="languages" data-i18n-placeholder="cvBuilder.languagesPlaceholder" placeholder="French (native), English (fluent)">
+            </div>
+            <div class="form-group">
+                <label data-i18n="cvBuilder.additionalNote">Additional Note</label>
+                <textarea class="form-control" id="additionalNote" rows="2" data-i18n-placeholder="cvBuilder.additionalNotePlaceholder" placeholder="Optional additional information..."></textarea>
+            </div>
+            <div class="form-group">
+                <label data-i18n="cvBuilder.professionalLinks">Professional Links</label>
+                <input type="text" class="form-control mb-2" id="website" data-i18n-placeholder="cvBuilder.websitePlaceholder" placeholder="Website">
+                <input type="text" class="form-control mb-2" id="linkedin" data-i18n-placeholder="cvBuilder.linkedinPlaceholder" placeholder="LinkedIn">
+                <input type="text" class="form-control mb-2" id="portfolio" data-i18n-placeholder="cvBuilder.portfolioPlaceholder" placeholder="Portfolio">
+                <input type="text" class="form-control mb-2" id="link1" data-i18n-placeholder="cvBuilder.additionalLink1" placeholder="Additional Link 1 (optional)">
+                <input type="text" class="form-control" id="link2" data-i18n-placeholder="cvBuilder.additionalLink2" placeholder="Additional Link 2 (optional)">
+            </div>
+            <div class="form-group">
+                <label data-i18n="cvBuilder.personalComment">Personal Comment</label>
+                <textarea class="form-control" id="personalComment" rows="3" data-i18n-placeholder="cvBuilder.personalCommentPlaceholder" placeholder="Add any specific personal comment or note here..."></textarea>
+            </div>
+        </div>
+
+        <div class="cv-section cv-mode-only">
+            <h3><i class="fas fa-quote-left"></i> <span data-i18n="cvBuilder.about">About</span></h3>
+            <textarea class="form-control" id="summary" rows="3" data-i18n-placeholder="cvBuilder.aboutPlaceholder" placeholder="Introduce yourself in a few lines..."></textarea>
+        </div>
+
+        <div class="cv-section cv-mode-only">
+            <h3><i class="fas fa-briefcase"></i> <span data-i18n="cvBuilder.professionalExperience">Professional Experience</span></h3>
+            <div id="experiencesList"></div>
+            <button class="btn btn-outline btn-add" id="addExperience">
+                <i class="fas fa-plus"></i> <span data-i18n="cvBuilder.addExperience">Add Experience</span>
+            </button>
+        </div>
+
+        <div class="cv-section cv-mode-only">
+            <h3><i class="fas fa-graduation-cap"></i> <span data-i18n="cvBuilder.education">Education</span></h3>
+            <div id="educationList"></div>
+            <button class="btn btn-outline btn-add" id="addEducation">
+                <i class="fas fa-plus"></i> <span data-i18n="cvBuilder.addEducation">Add Education</span>
+            </button>
+        </div>
+
+        <div class="cv-section cv-mode-only">
+            <h3><i class="fas fa-star"></i> <span data-i18n="cvBuilder.additionalSection1">Additional Section 1</span></h3>
+            <input type="text" class="form-control mb-2" id="extra1Title" data-i18n-placeholder="cvBuilder.sectionTitle" placeholder="Section title">
+            <textarea class="form-control" id="extra1Content" rows="3" data-i18n-placeholder="cvBuilder.content" placeholder="Content..."></textarea>
+        </div>
+
+        <div class="cv-section cv-mode-only">
+            <h3><i class="fas fa-info-circle"></i> <span data-i18n="cvBuilder.additionalSection2">Additional Section 2</span></h3>
+            <input type="text" class="form-control mb-2" id="extra2Title" data-i18n-placeholder="cvBuilder.sectionTitle" placeholder="Section title">
+            <textarea class="form-control" id="extra2Content" rows="3" data-i18n-placeholder="cvBuilder.content" placeholder="Content..."></textarea>
+        </div>
+
+        <div class="cv-section letter-mode-only" style="display: none;">
+            <h3><i class="fas fa-envelope-open-text"></i> <span data-i18n="cvBuilder.coverLetter">Cover Letter</span></h3>
+            <input type="text" class="form-control mb-2" id="coverLetterTitle" data-i18n-placeholder="cvBuilder.letterSubject" placeholder="Letter subject">
+            <textarea class="form-control" id="coverLetterContent" rows="20" data-i18n-placeholder="cvBuilder.letterBody" placeholder="Letter body..."></textarea>
+        </div>
+    </div>
+
+    <div class="cv-preview-container">
+        <div class="preview-controls">
+            <button class="btn btn-outline preview-zoom active" data-zoom="0.8">80%</button>
+            <button class="btn btn-outline preview-zoom" data-zoom="1">100%</button>
+            <button class="btn btn-outline preview-zoom" data-zoom="1.2">120%</button>
+        </div>
+        <div class="cv-preview-wrapper">
+            <div id="cvPreview" class="cv-preview">
+                <div class="cv-left-column">
+                    <div class="cv-photo-container">
+                        <img id="previewPhoto" src="" alt="">
+                        <div class="cv-photo-placeholder">
+                            <i class="fas fa-user"></i>
+                        </div>
+                    </div>
+                    <div class="cv-personal-info">
+                        <h1 class="cv-name"><span id="previewFirstName"></span> <span id="previewLastName"></span></h1>
+                        <h2 class="cv-job-title" id="previewJobTitle"></h2>
+                        
+                        <div class="cv-separator"></div>
+                        
+                        <div class="cv-contact-info">
+                            <div class="cv-info-item" id="previewEmailContainer">
+                                <i class="fas fa-envelope"></i>
+                                <span id="previewEmail"></span>
+                            </div>
+                            <div class="cv-info-item" id="previewPhoneContainer">
+                                <i class="fas fa-phone"></i>
+                                <span id="previewPhone"></span>
+                            </div>
+                            <div class="cv-info-item" id="previewLocationContainer">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span id="previewLocation"></span>
+                            </div>
+                        </div>
+                        
+                        <div class="cv-separator"></div>
+                        
+                        <div class="cv-links">
+                            <div class="cv-info-item" id="previewWebsiteContainer">
+                                <i class="fas fa-globe"></i>
+                                <span id="previewWebsite"></span>
+                            </div>
+                            <div class="cv-info-item" id="previewLinkedinContainer">
+                                <i class="fab fa-linkedin"></i>
+                                <span id="previewLinkedin"></span>
+                            </div>
+                            <div class="cv-info-item" id="previewPortfolioContainer">
+                                <i class="fas fa-briefcase"></i>
+                                <span id="previewPortfolio"></span>
+                            </div>
+                            <div class="cv-info-item" id="previewLink1Container">
+                                <i class="fas fa-link"></i>
+                                <span id="previewLink1"></span>
+                            </div>
+                            <div class="cv-info-item" id="previewLink2Container">
+                                <i class="fas fa-link"></i>
+                                <span id="previewLink2"></span>
+                            </div>
+                        </div>
+                        
+                        <div class="cv-separator"></div>
+                                                
+                        <div id="previewDrivingLicenseContainer" class="cv-info-item" style="display: none;">
+                            <i class="fas fa-car"></i>
+                            <span id="previewDrivingLicense"></span>
+                        </div>
+
+                        <div class="cv-separator"></div>
+                        
+                        <div class="cv-languages-info">
+                            <div class="cv-info-item" id="previewLanguagesContainer">
+                                <i class="fas fa-language"></i>
+                                <span id="previewLanguages"></span>
+                            </div>
+                        </div>
+                        
+                        <div class="cv-separator" id="notesSeparator"></div>
+                        
+                        <div class="cv-additional-note" id="previewAdditionalNoteContainer">
+                            <div class="cv-note-content" id="previewAdditionalNote"></div>
+                        </div>
+                        
+                        <div class="cv-separator" id="commentSeparator"></div>
+                        
+                        <div class="cv-personal-comment" id="previewPersonalCommentContainer">
+                            <div class="cv-comment-content" id="previewPersonalComment"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cv-main-column">
+                    <div class="cv-content cv-mode-content">
+                        <div class="cv-section-preview" id="previewSummarySection">
+                            <p id="previewSummary"></p>
+                        </div>
+                        <div class="cv-section-preview" id="previewExperienceSection">
+                            <h3 data-i18n="cvBuilder.professionalExperience">Professional Experience</h3>
+                            <div id="previewExperiences"></div>
+                        </div>
+                        <div class="cv-section-preview" id="previewEducationSection">
+                            <h3 data-i18n="cvBuilder.education">Education</h3>
+                            <div id="previewEducation"></div>
+                        </div>
+                        <div class="cv-section-preview" id="previewExtra1Section">
+                            <h3 id="previewExtra1Title"></h3>
+                            <p id="previewExtra1Content"></p>
+                        </div>
+                        <div class="cv-section-preview" id="previewExtra2Section">
+                            <h3 id="previewExtra2Title"></h3>
+                            <p id="previewExtra2Content"></p>
+                        </div>
+                    </div>
+                    <div class="cv-content letter-mode-content" style="display: none;">
+                        <div class="letter-object">
+                            <strong data-i18n="cvBuilder.subject">Subject:</strong> <span id="letterObject"></span>
+                        </div>
+                        <div class="letter-body" id="letterBody"></div>
+                        <div class="letter-signature">
+                            <span id="letterSignature"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Photo Crop Modal -->
+<div class="modal-backdrop" id="photoCropModal">
+    <div class="modal crop-modal">
+        <div class="modal-header">
+            <h3 class="modal-title" data-i18n="cvBuilder.cropPhoto">Crop Photo</h3>
+            <button class="modal-close" onclick="cancelPhotoCrop()">&times;</button>
+        </div>
+        <div class="modal-body crop-modal-body">
+            <div class="crop-workspace">
+                <div class="crop-editor">
+                    <div class="crop-container">
+                        <canvas id="cropCanvas" width="400" height="400"></canvas>
+                        <div class="crop-overlay">
+                            <div class="crop-circle" id="cropCircle">
+                                <div class="crop-handle handle-n" data-position="n"></div>
+                                <div class="crop-handle handle-e" data-position="e"></div>
+                                <div class="crop-handle handle-s" data-position="s"></div>
+                                <div class="crop-handle handle-w" data-position="w"></div>
+                            </div>
+                            <div class="crop-grid">
+                                <div class="grid-line grid-h grid-h1"></div>
+                                <div class="grid-line grid-h grid-h2"></div>
+                                <div class="grid-line grid-v grid-v1"></div>
+                                <div class="grid-line grid-v grid-v2"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="crop-preview">
+                    <div class="preview-label" data-i18n="common.preview">Preview</div>
+                    <div class="preview-container">
+                        <canvas id="previewCanvas" width="160" height="160"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline" onclick="cancelPhotoCrop()" data-i18n="cvBuilder.useAnotherPhoto">Use another photo</button>
+            <button class="btn btn-primary" onclick="confirmPhotoCrop()" data-i18n="common.upload">Upload</button>
+        </div>
+    </div>
+</div>
+
+<div id="exportModal" class="modal-backdrop">
+    <div class="modal">
+        <div class="modal-header">
+            <h2 class="modal-title" data-i18n="cvBuilder.exportCV">Export CV</h2>
+            <button class="modal-close" onclick="this.closest('.modal-backdrop').classList.remove('show')">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <p data-i18n="cvBuilder.chooseExportFormat">Choose export format:</p>
+            <div class="export-options">
+                <button class="export-option" data-format="pdf">
+                    <i class="fas fa-file-pdf"></i>
+                    <span>PDF</span>
+                    <small data-i18n="cvBuilder.recommendedFormat">Recommended format</small>
+                </button>
+                <button class="export-option" data-format="jpg">
+                    <i class="fas fa-file-image"></i>
+                    <span data-i18n="cvBuilder.jpgImage">JPG Image</span>
+                    <small data-i18n="cvBuilder.forOnlineSharing">For online sharing</small>
+                </button>
+                <button class="export-option" data-format="doc">
+                    <i class="fas fa-file-word"></i>
+                    <span data-i18n="cvBuilder.wordDocument">Word Document</span>
+                    <small data-i18n="cvBuilder.forEditing">For editing</small>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

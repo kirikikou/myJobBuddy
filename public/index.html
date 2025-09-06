@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>myJobBuddy - Premium Job Search Assistant</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+</head>
+<body>
+    <div class="app-container">
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-briefcase"></i>
+                    <span class="logo-text">myJobBuddy</span>
+                </div>
+            </div>
+            <nav class="nav-menu">
+                <a href="#" class="nav-item active" data-page="dashboard">
+                    <i class="fas fa-chart-line nav-icon"></i>
+                    <span class="nav-text">Dashboard</span>
+                </a>
+                <a href="#" class="nav-item" data-page="job-search">
+                    <i class="fas fa-search nav-icon"></i>
+                    <span class="nav-text">Job Search</span>
+                </a>
+
+                <a href="#" class="nav-item" data-page="email-search">
+                    <i class="fas fa-search nav-icon"></i>
+                    <span class="nav-text">Email Search</span>
+                </a>
+
+                <a href="#" class="nav-item" data-page="applications">
+                    <i class="fas fa-file-alt nav-icon"></i>
+                    <span class="nav-text">Applications</span>
+                </a>
+                
+                <span class="nav-category">YOUR PROFILE</span>
+                <a href="#" class="nav-item" data-page="profile">
+                    <i class="fas fa-user nav-icon"></i>
+                    <span class="nav-text">Profile</span>
+                </a>
+                <a href="#" class="nav-item" data-page="cv-builder">
+                    <i class="fas fa-file-pdf nav-icon"></i>
+                    <span class="nav-text">CV Builder</span>
+                </a>
+                <a href="#" class="nav-item" data-page="linktree">
+                    <i class="fas fa-link nav-icon"></i>
+                    <span class="nav-text">Linktree</span>
+                </a>
+                <a href="#" class="nav-item" data-page="resources">
+                    <i class="fas fa-folder nav-icon"></i>
+                    <span class="nav-text">Resources</span>
+                </a>
+                
+                <span class="nav-category">SETTINGS</span>
+                <a href="#" class="nav-item" data-page="settings">
+                    <i class="fas fa-cog nav-icon"></i>
+                    <span class="nav-text">Settings</span>
+                </a>
+                <a href="#" class="nav-item" data-page="help">
+                    <i class="fas fa-question-circle nav-icon"></i>
+                    <span class="nav-text">Help</span>
+                </a>
+                
+                <a href="#" class="nav-item" data-page="pricing">
+                    <i class="fas fa-crown nav-icon"></i>
+                    <span class="nav-text">Pricing</span>
+                </a>
+
+                <span class="nav-category">ACCOUNT</span>
+                <a href="#" class="nav-item logout-btn" id="logout-btn">
+                    <i class="fas fa-sign-out-alt nav-icon"></i>
+                    <span class="nav-text">Logout</span>
+                </a>
+            </nav>
+        </div>
+
+        <div class="main-content" id="main-content">
+            <div id="page-container"></div>
+        </div>
+    </div>
+
+    <div class="toast toast-success" id="toast-notification">
+        <div class="toast-icon">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        <div class="toast-content">
+            <div class="toast-title">Success</div>
+            <div class="toast-message" id="toast-message">Changes saved successfully!</div>
+        </div>
+    </div>
+
+    <svg width="0" height="0" style="position: absolute;">
+        <defs>
+            <linearGradient id="buttonGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#4f6df5" />
+                <stop offset="100%" stop-color="#8d67f7" />
+            </linearGradient>
+            <linearGradient id="accentGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#01c5ff" />
+                <stop offset="100%" stop-color="#00e4a1" />
+            </linearGradient>
+        </defs>
+    </svg>
+
+    <div class="modal-backdrop" id="add-company-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Add New Company</h3>
+                <button class="modal-close" id="close-add-company-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <div class="form-label">Company Name</div>
+                    <input type="text" class="form-control" id="new-company-name" placeholder="Enter company name">
+                </div>
+
+                <div class="form-group">
+                    <div class="form-label">Type</div>
+                    <select class="form-control" id="new-company-type">
+                        <option value="VFX">VFX</option>
+                        <option value="Animation">Animation</option>
+                        <option value="Game">Game</option>
+                        <option value="Tech">Tech</option>
+                        <option value="Studio">Studio</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <div class="form-label">Location</div>
+                    <input type="text" class="form-control" id="new-company-location" placeholder="City, Country">
+                </div>
+
+                <div class="form-group">
+                    <div class="form-label">Website</div>
+                    <input type="text" class="form-control" id="new-company-website" placeholder="https://example.com">
+                </div>
+
+                <div class="form-group">
+                    <div class="form-label">LinkedIn</div>
+                    <input type="text" class="form-control" id="new-company-linkedin" placeholder="https://linkedin.com/company/example">
+                </div>
+
+                <div class="form-group">
+                    <div class="form-label">Career URL</div>
+                    <input type="text" class="form-control" id="new-company-career" placeholder="https://example.com/careers">
+                </div>
+
+                <div class="form-group">
+                    <div class="form-label">Contact Email</div>
+                    <input type="email" class="form-control" id="new-company-email" placeholder="jobs@example.com">
+                </div>
+
+                <div class="form-group">
+                    <div class="form-label">Applied Date</div>
+                    <input type="date" class="form-control" id="new-company-date">
+                </div>
+
+                <div class="form-group">
+                    <div class="form-label">Comments</div>
+                    <textarea class="form-control" id="new-company-comments" placeholder="Add comments about this company"></textarea>
+                </div>
+
+                <div class="form-group" style="display: flex; align-items: center; margin-top: var(--space-md);">
+                    <input type="checkbox" id="new-company-favorite" style="margin-right: var(--space-sm); width: 18px; height: 18px;">
+                    <label for="new-company-favorite">Add to favorites</label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancel-add-company">Cancel</button>
+                <button class="btn btn-primary" id="save-new-company">Add Company</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-backdrop" id="add-application-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Add to Applications</h3>
+                <button class="modal-close" id="close-add-application-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <div class="form-label">Job Title</div>
+                    <input type="text" class="form-control" id="application-job-title" readonly>
+                </div>
+
+                <div class="form-group">
+                    <div class="form-label">Company Name</div>
+                    <input type="text" class="form-control" id="application-company-name" readonly>
+                </div>
+
+                <div class="form-group">
+                    <div class="form-label">Applied Date</div>
+                    <input type="date" class="form-control" id="application-date">
+                </div>
+
+                <div class="form-group">
+                    <div class="form-label">Contact Email</div>
+                    <input type="email" class="form-control" id="application-email" placeholder="Enter contact email (optional)">
+                </div>
+
+                <div class="form-group">
+                    <div class="form-label">Comments</div>
+                    <textarea class="form-control" id="application-comments" placeholder="Add your comments about this application" rows="4"></textarea>
+                </div>
+
+                <input type="hidden" id="application-location">
+                <input type="hidden" id="application-website">
+                <input type="hidden" id="application-career">
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancel-add-application">Cancel</button>
+                <button class="btn btn-primary" id="save-application">Add to Applications</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-backdrop" id="edit-company-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Edit Company</h3>
+                <button class="modal-close" id="close-edit-company-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="edit-company-id">
+                <div class="form-group">
+                    <div class="form-label">Company Name</div>
+                    <input type="text" class="form-control" id="edit-company-name" placeholder="Enter company name">
+                </div>
+
+                <div class="form-group">
+                    <div class="form-label">Type</div>
+                    <select class="form-control" id="edit-company-type">
+                        <option value="VFX">VFX</option>
+                        <option value="Animation">Animation</option>
+                        <option value="Game">Game</option>
+                        <option value="Tech">Tech</option>
+                        <option value="Studio">Studio</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <div class="form-label">Location</div>
+                    <input type="text" class="form-control" id="edit-company-location" placeholder="City, Country">
+                </div>
+
+                <div class="form-group">
+                    <div class="form-label">Website</div>
+                    <input type="text" class="form-control" id="edit-company-website" placeholder="https://example.com">
+                </div>
+
+                <div class="form-group">
+                    <div class="form-label">LinkedIn</div>
+                    <input type="text" class="form-control" id="edit-company-linkedin" placeholder="https://linkedin.com/company/example">
+                </div>
+
+                <div class="form-group">
+                    <div class="form-label">Career URL</div>
+                    <input type="text" class="form-control" id="edit-company-career" placeholder="https://example.com/careers">
+                </div>
+
+                <div class="form-group">
+                    <div class="form-label">Contact Email</div>
+                    <input type="email" class="form-control" id="edit-company-email" placeholder="jobs@example.com">
+                </div>
+
+                <div class="form-group">
+                    <div class="form-label">Applied Date</div>
+                    <input type="date" class="form-control" id="edit-company-date">
+                </div>
+
+                <div class="form-group">
+                    <div class="form-label">Comments</div>
+                    <textarea class="form-control" id="edit-company-comments" placeholder="Add comments about this company"></textarea>
+                </div>
+
+                <div class="form-group" style="display: flex; align-items: center; margin-top: var(--space-md);">
+                    <input type="checkbox" id="edit-company-favorite" style="margin-right: var(--space-sm); width: 18px; height: 18px;">
+                    <label for="edit-company-favorite">Add to favorites</label>
+                </div>
+            </div>
+            <div class="modal-footer" style="display: flex; justify-content: space-between; align-items: center;">
+                <button class="btn btn-danger" id="delete-company">
+                    <i class="fas fa-trash"></i> Delete
+                </button>
+                <div style="display: flex; gap: var(--space-sm);">
+                    <button class="btn btn-outline" id="cancel-edit-company">Cancel</button>
+                    <button class="btn btn-primary" id="save-edit-company">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-backdrop" id="export-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Export Data</h3>
+                <button class="modal-close" id="close-export-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p style="margin-bottom: var(--space-md); line-height: 1.5;">Copy the JSON data below and save it to a file for backup.</p>
+                <textarea class="form-control" id="export-data" style="height: 300px; font-family: monospace; font-size: 0.9rem;" readonly></textarea>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="close-export">Close</button>
+                <button class="btn btn-primary" id="copy-export-data">
+                    <i class="fas fa-copy"></i> Copy to Clipboard
+                </button>
+                <button class="btn btn-success" id="download-export-data">
+                    <i class="fas fa-download"></i> Download
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-backdrop" id="add-cover-letter-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Add Cover Letter</h3>
+                <button class="modal-close" id="close-add-cover-letter-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <div class="form-label">Title</div>
+                    <input type="text" class="form-control" id="cover-letter-title" placeholder="e.g., VFX Supervisor Application">
+                </div>
+
+                <div class="form-group">
+                    <div class="form-label">Content</div>
+                    <textarea class="form-control" id="cover-letter-content" style="height: 300px; font-family: inherit;" placeholder="Write your cover letter template here..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancel-add-cover-letter">Cancel</button>
+                <button class="btn btn-primary" id="save-cover-letter">Save Cover Letter</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-backdrop" id="view-cover-letter-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title" id="view-cover-letter-title">Cover Letter</h3>
+                <button class="modal-close" id="close-view-cover-letter-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="view-cover-letter-content" style="white-space: pre-wrap; line-height: 1.6;"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="close-view-cover-letter">Close</button>
+                <button class="btn btn-primary" id="edit-cover-letter">
+                    <i class="fas fa-pen"></i> Edit
+                </button>
+                <button class="btn btn-success" id="copy-cover-letter">
+                    <i class="fas fa-copy"></i> Copy
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-backdrop" id="add-link-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Add Professional Link</h3>
+                <button class="modal-close" id="close-add-link-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <div class="form-label">Title</div>
+                    <input type="text" class="form-control" id="link-title" placeholder="e.g., Portfolio, LinkedIn, Showreel">
+                </div>
+
+                <div class="form-group">
+                    <div class="form-label">URL</div>
+                    <input type="url" class="form-control" id="link-url" placeholder="https://example.com">
+                </div>
+
+                <div class="form-group">
+                    <div class="form-label">Icon</div>
+                    <select class="form-control" id="link-icon">
+                        <option value="fas fa-globe">Website</option>
+                        <option value="fab fa-linkedin">LinkedIn</option>
+                        <option value="fab fa-github">GitHub</option>
+                        <option value="fab fa-behance">Behance</option>
+                        <option value="fab fa-dribbble">Dribbble</option>
+                        <option value="fab fa-vimeo">Vimeo</option>
+                        <option value="fab fa-youtube">YouTube</option>
+                        <option value="fab fa-instagram">Instagram</option>
+                        <option value="fab fa-twitter">Twitter</option>
+                        <option value="fas fa-folder-open">Portfolio</option>
+                        <option value="fas fa-file-video">Showreel</option>
+                        <option value="fas fa-link">Generic Link</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <div class="form-label">Description (Optional)</div>
+                    <input type="text" class="form-control" id="link-description" placeholder="Brief description">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancel-add-link">Cancel</button>
+                <button class="btn btn-primary" id="save-link">Save Link</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-backdrop" id="reset-confirm-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Reset All Data</h3>
+                <button class="modal-close" id="close-reset-confirm-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p style="margin-bottom: var(--space-md); line-height: 1.5; color: var(--danger);">
+                    <i class="fas fa-exclamation-triangle" style="margin-right: 8px;"></i>
+                    <strong>Warning:</strong> This will permanently delete all your saved data, including companies, applications, cover letters, and links.
+                </p>
+                <p style="line-height: 1.5;">
+                    Are you sure you want to proceed? This action cannot be undone.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancel-reset">Cancel</button>
+                <button class="btn btn-danger" id="confirm-reset">
+                    <i class="fas fa-trash"></i> Reset All Data
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-backdrop" id="delete-confirmation-modal">
+        <div class="modal" style="max-width: 400px;">
+            <div class="modal-header">
+                <h3 class="modal-title">Delete Company</h3>
+                <button class="modal-close" id="close-delete-confirmation-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div style="text-align: center; margin-bottom: var(--space-lg);">
+                    <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: var(--danger); margin-bottom: var(--space-md);"></i>
+                    <p style="font-size: 1.1rem; margin-bottom: var(--space-sm);">Are you sure you want to delete</p>
+                    <p style="font-weight: 600; color: var(--text-primary);" id="company-name-to-delete"></p>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem;">This action cannot be undone.</p>
+                </div>
+            </div>
+            <div class="modal-footer" style="display: flex; justify-content: center; gap: var(--space-md);">
+                <button class="btn btn-outline" id="cancel-delete-confirmation">Cancel</button>
+                <button class="btn btn-danger" id="confirm-delete-company">
+                    <i class="fas fa-trash"></i> Delete Company
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-backdrop" id="logout-confirm-modal">
+        <div class="modal elegant-confirm" style="max-width: 400px;">
+            <div class="modal-header">
+                <h3 class="modal-title">Sign Out</h3>
+                <button class="modal-close" id="close-logout-confirm-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div style="text-align: center; margin-bottom: var(--space-lg);">
+                    <div class="confirm-icon" style="margin-bottom: var(--space-md);">
+                        <i class="fas fa-sign-out-alt" style="font-size: 3rem; color: var(--primary);"></i>
+                    </div>
+                    <p style="font-size: 1.1rem; margin-bottom: var(--space-sm); color: var(--text-primary);">Are you sure you want to sign out?</p>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem;">You'll need to log in again to access your account.</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline cancel-btn" id="cancel-logout-confirmation">Cancel</button>
+                <button class="btn btn-danger confirm-btn" id="confirm-logout">
+                    <i class="fas fa-sign-out-alt"></i> Sign Out
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/utils.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/dictionaries-client.js"></script>
+    <script src="js/components/modals.js"></script>
+    <script src="js/main.js"></script>
+
+<!-- CSV Import Modal -->
+<div class="modal-backdrop" id="import-modal">
+    <div class="modal csv-import-modal">
+        <div class="modal-header">
+            <h3 class="modal-title">Import Companies from CSV</h3>
+            <button class="modal-close" id="close-import-modal">&times;</button>
+        </div>
+        
+        <div id="upload-step" class="modal-body">
+            <div class="import-step-header">
+                <div class="step-indicator">
+                    <span class="step-number active">1</span>
+                    <span class="step-title">Upload CSV File</span>
+                </div>
+            </div>
+            
+            <div class="csv-upload-section">
+                <div class="csv-upload-area" id="csv-upload-area">
+                    <div class="upload-icon">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                    </div>
+                    <h4>Upload your CSV file</h4>
+                    <p>Drag and drop your CSV file here, or click to browse</p>
+                    <p class="upload-hint">Supported format: .csv files only</p>
+                </div>
+                <input type="file" id="csv-file-input" accept=".csv" style="display: none;">
+            </div>
+            
+            <div id="csv-preview-area" class="csv-preview-section"></div>
+            
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancel-import">Cancel</button>
+                <button class="btn btn-primary" id="next-to-mapping" disabled>Next</button>
+            </div>
+        </div>
+        
+        <div id="mapping-step" class="modal-body" style="display: none;">
+            <div class="import-step-header">
+                <div class="step-indicator">
+                    <span class="step-number active">2</span>
+                    <span class="step-title">Map Columns</span>
+                </div>
+            </div>
+            
+            <div id="mapping-container"></div>
+            <div id="mapping-preview" class="mapping-preview-section"></div>
+            
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="back-to-upload">Back</button>
+                <button class="btn btn-primary" id="next-to-preview">Preview Import</button>
+            </div>
+        </div>
+        
+        <div id="preview-step" class="modal-body" style="display: none;">
+            <div class="import-step-header">
+                <div class="step-indicator">
+                    <span class="step-number active">3</span>
+                    <span class="step-title">Preview & Confirm</span>
+                </div>
+            </div>
+            
+            <div id="import-preview"></div>
+            
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="back-to-mapping">Back</button>
+                <button class="btn btn-success" id="confirm-import">
+                    <i class="fas fa-check"></i>
+                    Confirm Import
+                </button>
+            </div>
+        </div>
+    </div>
+</div>    
+
+</body>
+</html>

@@ -1,0 +1,637 @@
+<!-- applications.html -->
+<div class="page-header">
+  <h2 class="page-title" data-i18n="applications.title">Applications</h2>
+  <div class="page-actions">
+    <button class="btn btn-outline" id="export-data-btn">
+      <i class="fas fa-file-export"></i>
+      <span data-i18n="common.export">Export</span>
+    </button>
+    <button class="btn btn-outline" id="import-data-btn">
+      <i class="fas fa-file-import"></i>
+      <span data-i18n="common.import">Import</span>
+    </button>
+  </div>
+</div>
+
+<div class="card applications-card">
+  <div class="card-header">
+    <div class="card-title">
+      <i class="fas fa-building"></i>
+      <span data-i18n="applications.companies">Companies</span>
+    </div>
+  </div>
+  <div class="card-body">
+    <!-- Controls Section -->
+    <div class="table-controls" style="margin-bottom: var(--space-md); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--space-sm);">
+      
+      <!-- Search and Sort -->
+      <div class="search-sort-controls" style="display: flex; align-items: center; gap: var(--space-sm);">
+        <input
+          type="text"
+          class="search-table form-control"
+          id="company-search"
+          data-i18n-placeholder="applications.searchCompanies"
+          placeholder="Search companies..."
+          style="width: 250px;"
+        >
+        
+        <div class="sort-controls" style="display: flex; align-items: center; gap: var(--space-xs);">
+          <span style="font-size: 0.85rem; color: rgba(255, 255, 255, 0.7);" data-i18n="common.sort">Sort:</span>
+          <button class="sort-button" id="sort-name-asc" data-sort="name" data-direction="asc" data-i18n-title="applications.sortAZ" title="Sort A-Z">
+            <i class="fas fa-sort-alpha-down"></i>
+          </button>
+          <button class="sort-button" id="sort-name-desc" data-sort="name" data-direction="desc" data-i18n-title="applications.sortZA" title="Sort Z-A">
+            <i class="fas fa-sort-alpha-up"></i>
+          </button>
+          <button class="sort-button" id="sort-date-asc" data-sort="appliedDate" data-direction="asc" data-i18n-title="applications.sortDateOldest" title="Sort Date: Oldest First">
+            <i class="fas fa-sort-numeric-down"></i>
+          </button>
+          <button class="sort-button" id="sort-date-desc" data-sort="appliedDate" data-direction="desc" data-i18n-title="applications.sortDateNewest" title="Sort Date: Newest First">
+            <i class="fas fa-sort-numeric-up"></i>
+          </button>
+        </div>
+      </div>
+      
+      <!-- Filter Buttons -->
+      <div class="filter-buttons">
+        <button class="site-button active" data-filter="all" data-i18n="applications.filterAll">All</button>
+        <button class="site-button" data-filter="applied" data-i18n="applications.filterApplied">Applied</button>
+        <button class="site-button" data-filter="favorite" data-i18n="applications.filterFavorites">Favorites</button>
+        <button class="site-button" data-filter="not-applied" data-i18n="applications.filterNotApplied">Not Applied</button>
+        <button class="site-button" data-filter="hot" data-i18n="applications.filterHot">Hot (>30d)</button>
+        <button class="site-button" data-filter="medium" data-i18n="applications.filterMedium">Medium (15-30d)</button>
+        <button class="site-button" data-filter="cold" data-i18n="applications.filterCold">Cold (<15d)</button>
+      </div>
+      
+      <!-- Selection Filter -->
+      <div class="selection-filter" style="display: flex; align-items: center; gap: var(--space-xs);">
+        <span style="font-size: 0.85rem; color: rgba(255, 255, 255, 0.7);" data-i18n="applications.showSelection">Show Selection:</span>
+        <div class="selection-buttons">
+          <button class="selection-button active" data-selection="all" data-i18n="applications.filterAll">All</button>
+          <button class="selection-button" data-selection="A">A</button>
+          <button class="selection-button" data-selection="B">B</button>
+          <button class="selection-button" data-selection="C">C</button>
+        </div>
+      </div>
+      
+      <!-- Items Per Page -->
+      <div class="items-per-page" style="display: flex; align-items: center; gap: var(--space-xs);">
+        <span style="font-size: 0.85rem; color: rgba(255, 255, 255, 0.7);" data-i18n="applications.showItems">Show:</span>
+        <select class="form-control" id="items-per-page" style="width: 80px; padding: 6px 10px;">
+          <option value="10">10</option>
+          <option value="50" selected>50</option>
+          <option value="100">100</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Edit Mode Section -->
+    <div class="edit-mode-section" style="margin-bottom: var(--space-md); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--space-sm);">
+      <div class="edit-toggle">
+        <button class="btn btn-outline" id="toggle-edit-mode">
+          <i class="fas fa-edit"></i>
+          <span data-i18n="common.edit">Edit</span>
+        </button>
+      </div>
+      
+      <!-- Selection Controls (Hidden by default) -->
+      <div class="selection-controls" id="selection-controls" style="display: none; align-items: center; gap: var(--space-sm);">
+        <button class="btn btn-outline btn-sm" id="select-all-btn">
+          <i class="fas fa-check-square"></i>
+          <span data-i18n="applications.selectAll">Select All</span>
+        </button>
+        <button class="btn btn-outline btn-sm" id="deselect-all-btn" style="display: none;">
+          <i class="fas fa-square"></i>
+          <span data-i18n="applications.deselectAll">Deselect All</span>
+        </button>
+        <span id="selected-count" style="font-size: 0.85rem; color: rgba(255, 255, 255, 0.7); margin-left: 10px;" data-i18n="applications.selectedCount" data-i18n-params='{"count":0}'>0 selected</span>
+      </div>
+      
+      <!-- Bulk Action Buttons (Hidden by default) -->
+      <div class="bulk-action-buttons" id="bulk-action-buttons" style="display: none; align-items: center; gap: var(--space-sm);">
+        <button class="btn btn-warning btn-sm" id="clear-all-dates-btn">
+          <i class="fas fa-calendar-times"></i>
+          <span data-i18n="applications.clearAllDates">Clear All Dates</span>
+        </button>
+        <button class="btn btn-warning btn-sm" id="clear-selected-dates-btn" style="display: none;">
+          <i class="fas fa-calendar-minus"></i>
+          <span data-i18n="applications.clearSelectedDates">Clear Selected Dates</span>
+        </button>
+        <button class="btn btn-warning btn-sm" id="clear-all-favorites-btn">
+          <i class="fas fa-star-half-alt"></i>
+          <span data-i18n="applications.clearAllFavorites">Clear All Favorites</span>
+        </button>
+        <button class="btn btn-warning btn-sm" id="clear-selected-favorites-btn" style="display: none;">
+          <i class="fas fa-star-half"></i>
+          <span data-i18n="applications.clearSelectedFavorites">Clear Selected Favorites</span>
+        </button>
+        <button class="btn btn-danger-improved btn-sm" id="clear-all-companies-btn">
+          <i class="fas fa-trash-alt"></i>
+          <span data-i18n="applications.clearAllCompanies">Clear All Companies</span>
+        </button>
+        <button class="btn btn-danger-improved btn-sm" id="delete-selected-btn" style="display: none;">
+          <i class="fas fa-trash"></i>
+          <span data-i18n="applications.deleteSelected">Delete Selected</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Organic Bulk Edit Hint -->
+    <div class="bulk-edit-hint" id="bulk-edit-hint" style="display: none; margin-bottom: var(--space-md); padding: var(--space-sm); background: rgba(79, 109, 245, 0.1); border: 1px solid rgba(79, 109, 245, 0.3); border-radius: 6px; font-size: 0.85rem; color: rgba(255, 255, 255, 0.8);">
+      <i class="fas fa-info-circle" style="margin-right: 6px; color: #4f6df5;"></i>
+      <strong>Bulk Edit Active:</strong> When you modify Selection, Application Date, or Favorites on any selected company, all selected companies will be updated automatically.
+    </div>
+
+    <!-- Dynamic Spreadsheet Table -->
+    <div class="table-responsive" style="overflow-x: auto;">
+      <table class="companies-table dynamic-table" id="companies-table">
+        <thead>
+          <tr>
+            <th style="width: 40px; display: none;" id="select-header">
+              <input type="checkbox" id="select-all-header" style="width: 18px; height: 18px;">
+            </th>
+            <th style="width: 200px;" data-i18n="applications.company">Company</th>
+            <th style="width: 150px;" data-i18n="applications.location">Location</th>
+            <th style="width: 80px;" data-i18n="applications.selection">Selection</th>
+            <th style="width: 60px;" data-i18n="applications.website">Website</th>
+            <th style="width: 60px;">LinkedIn</th>
+            <th style="width: 60px;" data-i18n="applications.contact">Contact</th>
+            <th style="width: 120px;" data-i18n="applications.appliedDate">Applied Date</th>
+            <th style="width: 250px;" data-i18n="applications.comments">Comments</th>
+            <th style="width: 60px;" data-i18n="applications.favorite">Favorite</th>
+            <th style="width: 80px;" data-i18n="applications.actions">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="companies-tbody">
+          <!-- New row template - always at top -->
+          <tr class="new-row" id="new-company-row">
+            <td style="display: none;" class="select-cell-new">
+              <span style="opacity: 0.3;">
+                <i class="fas fa-plus"></i>
+              </span>
+            </td>
+            <td>
+              <input type="text" class="inline-input company-name" data-i18n-placeholder="applications.enterCompanyName" placeholder="Enter company name..." data-field="name">
+            </td>
+            <td>
+              <input type="text" class="inline-input" data-i18n-placeholder="applications.enterLocation" placeholder="City, Country" data-field="location">
+            </td>
+            <td>
+              <select class="inline-input selection-select" data-field="selection">
+                <option value="">-</option>
+                <option value="A">A</option>
+                <option value="B">B</option>
+                <option value="C">C</option>
+              </select>
+            </td>
+            <td class="icon-cell">
+              <span class="link-icon-placeholder" data-field="website">
+                <i class="fas fa-globe" style="opacity: 0.3;"></i>
+              </span>
+            </td>
+            <td class="icon-cell">
+              <span class="link-icon-placeholder" data-field="linkedin">
+                <i class="fab fa-linkedin" style="opacity: 0.3;"></i>
+              </span>
+            </td>
+            <td class="icon-cell">
+              <span class="link-icon-placeholder" data-field="email">
+                <i class="fas fa-envelope" style="opacity: 0.3;"></i>
+              </span>
+            </td>
+            <td>
+              <input type="date" class="inline-input date-input" data-field="appliedDate">
+            </td>
+            <td>
+              <div class="comment-cell">
+                <span class="comment-placeholder" data-i18n-title="applications.clickToAddComments" title="Click to add comments">
+                  <i class="fas fa-comment-dots" style="opacity: 0.3; margin-right: 6px;"></i>
+                  <span data-i18n="applications.addComments">Add comments...</span>
+                </span>
+              </div>
+            </td>
+            <td class="favorite-cell">
+              <i class="fas fa-star favorite-star" data-field="favorite"></i>
+            </td>
+            <td class="actions-cell">
+              <button class="btn-icon save-row-btn" data-i18n-title="common.save" title="Save" style="opacity: 0.3;">
+                <i class="fas fa-check"></i>
+              </button>
+            </td>
+          </tr>
+          <!-- Existing companies will be inserted here -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination Controls -->
+    <div class="pagination-controls" style="margin-top: var(--space-md); display: flex; justify-content: space-between; align-items: center;">
+      <div class="pagination-info">
+        <span data-i18n="applications.showing">Showing</span> <span id="showing-start">0</span>-<span id="showing-end">0</span> <span data-i18n="applications.of">of</span> <span id="total-companies">0</span> <span data-i18n="applications.companies">companies</span>
+      </div>
+      <div class="pagination-buttons">
+        <button class="pagination-button" id="first-page" data-i18n-title="applications.first" title="First">
+          <i class="fas fa-angle-double-left"></i>
+        </button>
+        <button class="pagination-button" id="prev-page" data-i18n-title="common.previous" title="Previous">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+        <span class="page-info" id="page-info">
+          <span data-i18n="applications.page">Page</span> 1 <span data-i18n="applications.of">of</span> 1
+        </span>
+        <button class="pagination-button" id="next-page" data-i18n-title="common.next" title="Next">
+          <i class="fas fa-chevron-right"></i>
+        </button>
+        <button class="pagination-button" id="last-page" data-i18n-title="applications.last" title="Last">
+          <i class="fas fa-angle-double-right"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Quick Edit Modal for Links -->
+<div class="modal-backdrop" id="quick-edit-links-modal">
+  <div class="modal" style="max-width: 500px;">
+    <div class="modal-header">
+      <h3 class="modal-title" data-i18n="applications.editLinks">Edit Links</h3>
+      <button class="modal-close" id="close-quick-edit-modal">&times;</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="edit-links-company-id">
+      <div class="form-group">
+        <div class="form-label" data-i18n="applications.website">Website</div>
+        <input type="url" class="form-control" id="edit-website" placeholder="https://example.com">
+      </div>
+      <div class="form-group">
+        <div class="form-label">LinkedIn</div>
+        <input type="url" class="form-control" id="edit-linkedin" placeholder="https://linkedin.com/company/example">
+      </div>
+      <div class="form-group">
+        <div class="form-label" data-i18n="applications.contactEmail">Contact Email</div>
+        <input type="email" class="form-control" id="edit-email" placeholder="jobs@example.com">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" id="cancel-edit-links" data-i18n="common.cancel">Cancel</button>
+      <button class="btn btn-primary" id="save-edit-links" data-i18n="applications.saveLinks">Save Links</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Comments Modal -->
+<div class="modal-backdrop" id="add-comments-modal">
+  <div class="modal" style="max-width: 600px;">
+    <div class="modal-header">
+      <h3 class="modal-title" data-i18n="applications.addComments">Add Comments</h3>
+      <button class="modal-close" id="close-add-comments-modal">&times;</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="comments-company-id">
+      <div class="form-group">
+        <div class="form-label" data-i18n="applications.title">Title</div>
+        <input type="text" class="form-control" id="comments-title" data-i18n-placeholder="applications.titlePlaceholder" placeholder="e.g., Interview Notes, Application Status">
+      </div>
+
+      <div class="form-group">
+        <div class="form-label" data-i18n="applications.content">Content</div>
+        <textarea class="form-control" id="comments-content" style="height: 300px; font-family: inherit;" data-i18n-placeholder="applications.contentPlaceholder" placeholder="Write your detailed comments here..."></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" id="cancel-add-comments" data-i18n="common.cancel">Cancel</button>
+      <button class="btn btn-primary" id="save-comments" data-i18n="applications.saveComments">Save Comments</button>
+    </div>
+  </div>
+</div>
+
+<!-- Clear All Applied Dates Modal -->
+<div class="modal-backdrop" id="clear-all-dates-modal">
+  <div class="modal" style="max-width: 450px;">
+      <div class="modal-header">
+          <h3 class="modal-title" data-i18n="applications.clearAllDates">Clear All Applied Dates</h3>
+          <button class="modal-close" id="close-clear-all-dates-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+          <div style="text-align: center; padding: var(--space-md) 0;">
+              <div style="color: #ffa502; font-size: 3rem; margin-bottom: var(--space-md);">
+                  <i class="fas fa-calendar-times"></i>
+              </div>
+              <p style="font-size: 1.1rem; margin-bottom: var(--space-sm);" data-i18n="applications.confirmClearAllDates">
+                  Are you sure you want to clear all applied dates?
+              </p>
+              <p style="color: rgba(255, 255, 255, 0.7); font-size: 0.9rem;" data-i18n="applications.clearAllDatesWarning">
+                  This will remove all application dates but keep your companies. This action cannot be undone.
+              </p>
+          </div>
+      </div>
+      <div class="modal-footer">
+          <button class="btn btn-outline" id="cancel-clear-all-dates" data-i18n="common.cancel">Cancel</button>
+          <button class="btn btn-warning" id="confirm-clear-all-dates">
+              <i class="fas fa-calendar-times"></i> <span data-i18n="applications.clearAllDates">Clear All Dates</span>
+          </button>
+      </div>
+  </div>
+</div>
+
+<!-- Clear Selected Applied Dates Modal -->
+<div class="modal-backdrop" id="clear-selected-dates-modal">
+  <div class="modal" style="max-width: 450px;">
+      <div class="modal-header">
+          <h3 class="modal-title" data-i18n="applications.clearSelectedDates">Clear Selected Applied Dates</h3>
+          <button class="modal-close" id="close-clear-selected-dates-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+          <div style="text-align: center; padding: var(--space-md) 0;">
+              <div style="color: #ffa502; font-size: 3rem; margin-bottom: var(--space-md);">
+                  <i class="fas fa-calendar-minus"></i>
+              </div>
+              <p style="font-size: 1.1rem; margin-bottom: var(--space-sm);" data-i18n="applications.confirmClearSelectedDates">
+                  Are you sure you want to clear applied dates for selected companies?
+              </p>
+              <p style="color: rgba(255, 255, 255, 0.7); font-size: 0.9rem;" data-i18n="applications.clearSelectedDatesWarning">
+                  This will remove application dates for selected companies only. This action cannot be undone.
+              </p>
+          </div>
+      </div>
+      <div class="modal-footer">
+          <button class="btn btn-outline" id="cancel-clear-selected-dates" data-i18n="common.cancel">Cancel</button>
+          <button class="btn btn-warning" id="confirm-clear-selected-dates">
+              <i class="fas fa-calendar-minus"></i> <span data-i18n="applications.clearSelectedDates">Clear Selected Dates</span>
+          </button>
+      </div>
+  </div>
+</div>
+
+<!-- Clear All Favorites Modal -->
+<div class="modal-backdrop" id="clear-all-favorites-modal">
+  <div class="modal" style="max-width: 450px;">
+      <div class="modal-header">
+          <h3 class="modal-title" data-i18n="applications.clearAllFavorites">Clear All Favorites</h3>
+          <button class="modal-close" id="close-clear-all-favorites-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+          <div style="text-align: center; padding: var(--space-md) 0;">
+              <div style="color: #ffa502; font-size: 3rem; margin-bottom: var(--space-md);">
+                  <i class="fas fa-star-half-alt"></i>
+              </div>
+              <p style="font-size: 1.1rem; margin-bottom: var(--space-sm);" data-i18n="applications.confirmClearAllFavorites">
+                  Are you sure you want to remove all companies from favorites?
+              </p>
+              <p style="color: rgba(255, 255, 255, 0.7); font-size: 0.9rem;" data-i18n="applications.clearAllFavoritesWarning">
+                  This will remove the favorite status from all companies. Companies will remain but won't be marked as favorites.
+              </p>
+          </div>
+      </div>
+      <div class="modal-footer">
+          <button class="btn btn-outline" id="cancel-clear-all-favorites" data-i18n="common.cancel">Cancel</button>
+          <button class="btn btn-warning" id="confirm-clear-all-favorites">
+              <i class="fas fa-star-half-alt"></i> <span data-i18n="applications.clearAllFavorites">Clear All Favorites</span>
+          </button>
+      </div>
+  </div>
+</div>
+
+<!-- Clear Selected Favorites Modal -->
+<div class="modal-backdrop" id="clear-selected-favorites-modal">
+  <div class="modal" style="max-width: 450px;">
+      <div class="modal-header">
+          <h3 class="modal-title" data-i18n="applications.clearSelectedFavorites">Clear Selected Favorites</h3>
+          <button class="modal-close" id="close-clear-selected-favorites-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+          <div style="text-align: center; padding: var(--space-md) 0;">
+              <div style="color: #ffa502; font-size: 3rem; margin-bottom: var(--space-md);">
+                  <i class="fas fa-star-half"></i>
+              </div>
+              <p style="font-size: 1.1rem; margin-bottom: var(--space-sm);" data-i18n="applications.confirmClearSelectedFavorites">
+                  Are you sure you want to remove selected companies from favorites?
+              </p>
+              <p style="color: rgba(255, 255, 255, 0.7); font-size: 0.9rem;" data-i18n="applications.clearSelectedFavoritesWarning">
+                  This will remove the favorite status from selected companies only. Companies will remain but won't be marked as favorites.
+              </p>
+          </div>
+      </div>
+      <div class="modal-footer">
+          <button class="btn btn-outline" id="cancel-clear-selected-favorites" data-i18n="common.cancel">Cancel</button>
+          <button class="btn btn-warning" id="confirm-clear-selected-favorites">
+              <i class="fas fa-star-half"></i> <span data-i18n="applications.clearSelectedFavorites">Clear Selected Favorites</span>
+          </button>
+      </div>
+  </div>
+</div>
+
+<!-- Clear All Companies Modal -->
+<div class="modal-backdrop" id="clear-all-companies-modal">
+  <div class="modal" style="max-width: 450px;">
+      <div class="modal-header">
+          <h3 class="modal-title" data-i18n="applications.clearAllCompanies">Clear All Companies</h3>
+          <button class="modal-close" id="close-clear-all-companies-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+          <div style="text-align: center; padding: var(--space-md) 0;">
+              <div style="color: #ff4757; font-size: 3rem; margin-bottom: var(--space-md);">
+                  <i class="fas fa-exclamation-triangle"></i>
+              </div>
+              <p style="font-size: 1.1rem; margin-bottom: var(--space-sm); color: #ff4757;" data-i18n="applications.warningDeleteAll">
+                  <strong>Warning:</strong> This will permanently delete ALL companies!
+              </p>
+              <p style="color: rgba(255, 255, 255, 0.7); font-size: 0.9rem;" data-i18n="applications.deleteAllWarning">
+                  This action will remove all your companies, applications, and related data. This cannot be undone.
+              </p>
+          </div>
+      </div>
+      <div class="modal-footer">
+          <button class="btn btn-outline" id="cancel-clear-all-companies" data-i18n="common.cancel">Cancel</button>
+          <button class="btn btn-danger-improved" id="confirm-clear-all-companies">
+              <i class="fas fa-trash-alt"></i> <span data-i18n="applications.deleteAllCompanies">Delete All Companies</span>
+          </button>
+      </div>
+  </div>
+</div>
+
+<!-- Delete Selected Companies Modal -->
+<div class="modal-backdrop" id="delete-selected-modal">
+  <div class="modal" style="max-width: 500px;">
+      <div class="modal-header">
+          <h3 class="modal-title" data-i18n="applications.deleteSelected">Delete Selected Companies</h3>
+          <button class="modal-close" id="close-delete-selected-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+          <div style="padding: var(--space-md) 0;">
+              <div style="color: #ff4757; font-size: 2rem; margin-bottom: var(--space-md); text-align: center;">
+                  <i class="fas fa-trash"></i>
+              </div>
+              <p style="font-size: 1.1rem; margin-bottom: var(--space-md); text-align: center;">
+                  <span data-i18n="applications.confirmDeleteSelected">Are you sure you want to delete</span> <strong><span id="selected-companies-count">0</span> <span data-i18n="applications.selectedCompanies">selected companies?</span></strong>
+              </p>
+              <div style="max-height: 200px; overflow-y: auto; background: rgba(0,0,0,0.2); border-radius: 4px; padding: var(--space-sm); margin-bottom: var(--space-sm);">
+                  <ul id="selected-companies-list" style="list-style: none; padding: 0; margin: 0; color: rgba(255, 255, 255, 0.8); font-size: 0.9rem;">
+                      <!-- Selected company names will be populated here -->
+                  </ul>
+              </div>
+              <p style="color: rgba(255, 255, 255, 0.7); font-size: 0.9rem; text-align: center;" data-i18n="applications.cannotBeUndone">
+                  This action cannot be undone.
+              </p>
+          </div>
+      </div>
+      <div class="modal-footer">
+          <button class="btn btn-outline" id="cancel-delete-selected" data-i18n="common.cancel">Cancel</button>
+          <button class="btn btn-danger-improved" id="confirm-delete-selected">
+              <i class="fas fa-trash"></i> <span data-i18n="applications.deleteSelected">Delete Selected</span>
+          </button>
+      </div>
+  </div>
+</div>
+
+<style>
+  .btn-danger-improved {
+      background: rgba(255, 71, 87, 0.15) !important;
+      color: #ff4757 !important;
+      border: 2px solid #ff4757 !important;
+      font-weight: 600 !important;
+      backdrop-filter: blur(10px);
+  }
+  
+  .btn-danger-improved:hover {
+      background: rgba(255, 71, 87, 0.25) !important;
+      border-color: #ff3838 !important;
+      color: #ff3838 !important;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(255, 71, 87, 0.3);
+  }
+  
+  .btn-warning {
+      background: rgba(255, 165, 2, 0.15) !important;
+      color: #ffa502 !important;
+      border: 2px solid #ffa502 !important;
+      font-weight: 600 !important;
+      backdrop-filter: blur(10px);
+  }
+  
+  .btn-warning:hover {
+      background: rgba(255, 165, 2, 0.25) !important;
+      border-color: #ff9500 !important;
+      color: #ff9500 !important;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(255, 165, 2, 0.3);
+  }
+  
+  .edit-mode-section .btn {
+      min-height: 36px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 8px 16px;
+      border-radius: 6px;
+      transition: all 0.2s ease;
+  }
+  
+  #toggle-edit-mode {
+      background: rgba(79, 109, 245, 0.15) !important;
+      color: #ffffff !important;
+      border: 2px solid #4f6df5 !important;
+      font-weight: 600 !important;
+      backdrop-filter: blur(10px);
+  }
+  
+  #toggle-edit-mode:hover {
+      background: rgba(79, 109, 245, 0.25) !important;
+      border-color: #4f6df5 !important;
+      color: #ffffff !important;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(79, 109, 245, 0.3);
+  }
+  
+  #toggle-edit-mode.active {
+      background: rgba(79, 109, 245, 0.15) !important;
+      border: 2px solid #4f6df5 !important;
+      color: #ffffff !important;
+      font-weight: 600 !important;
+  }
+  
+  #toggle-edit-mode.active:hover {
+      background: rgba(79, 109, 245, 0.25) !important;
+      border-color: #4f6df5 !important;
+      color: #ffffff !important;
+  }
+
+  .selection-button {
+      background: rgba(255, 255, 255, 0.1);
+      color: rgba(255, 255, 255, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 0.85rem;
+      font-weight: 500;
+  }
+
+  .selection-button:hover {
+      background: rgba(255, 255, 255, 0.15);
+      color: rgba(255, 255, 255, 0.9);
+      border-color: rgba(255, 255, 255, 0.3);
+  }
+
+  .selection-button.active {
+      background: rgba(79, 109, 245, 0.2);
+      color: #ffffff;
+      border-color: #4f6df5;
+      font-weight: 600;
+  }
+
+  .selection-select {
+      background: rgba(255, 255, 255, 0.1);
+      color: rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 4px;
+      padding: 6px 8px;
+      font-size: 0.85rem;
+      width: 60px;
+      text-align: center;
+  }
+
+  .selection-select:focus {
+      outline: none;
+      border-color: #4f6df5;
+      background: rgba(255, 255, 255, 0.15);
+  }
+
+  .row-hot {
+      background: rgba(255, 71, 87, 0.08) !important;
+      border-left: 3px solid rgba(255, 71, 87, 0.6);
+  }
+
+  .row-medium {
+      background: rgba(255, 165, 2, 0.08) !important;
+      border-left: 3px solid rgba(255, 165, 2, 0.6);
+  }
+
+  .row-cold {
+      background: rgba(74, 144, 226, 0.08) !important;
+      border-left: 3px solid rgba(74, 144, 226, 0.6);
+  }
+
+  .bulk-edit-hint {
+      animation: fadeIn 0.3s ease;
+  }
+
+  @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 768px) {
+      .edit-mode-section {
+          flex-direction: column;
+          align-items: stretch;
+      }
+      
+      .selection-controls, .bulk-action-buttons {
+          justify-content: center;
+          flex-wrap: wrap;
+      }
+  }
+</style>

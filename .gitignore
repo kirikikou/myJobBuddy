@@ -1,0 +1,17 @@
+# Dépendances Node
+node_modules/
+
+# Données temporaires de navigation
+browser_data/
+
+# Cache interne
+cache/
+
+# Dossiers de debug
+debug/
+
+# Scripts locaux non versionnés
+scripts/
+
+# Sanity checks et tests
+sanityCheck/

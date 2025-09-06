@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyJobBuddy - Detailed Monitoring</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .nav-link {
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.7);
+            border: none;
+            border-radius: 6px;
+            text-decoration: none;
+            color: #333;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.9);
+            transform: translateY(-2px);
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.7);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .tab.active {
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 20px;
+        }
+        
+        .card h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .filters {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .filter-group label {
+            font-size: 12px;
+            color: #666;
+            font-weight: bold;
+        }
+        
+        .filter-group select,
+        .filter-group input {
+            padding: 6px 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .filter-group input[type="text"] {
+            min-width: 200px;
+        }
+        
+        .table-container {
+            max-height: 80vh;
+            overflow: auto;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+        
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+            white-space: nowrap;
+        }
+        
+        th {
+            background: #f8f9fa;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            font-weight: 600;
+            cursor: pointer;
+            user-select: none;
+        }
+        
+        th:hover {
+            background: #e9ecef;
+        }
+        
+        th.sortable::after {
+            content: ' ⬍';
+            color: #ccc;
+            margin-left: 5px;
+        }
+        
+        th.sort-asc::after {
+            content: ' ▲';
+            color: #007bff;
+        }
+        
+        th.sort-desc::after {
+            content: ' ▼';
+            color: #007bff;
+        }
+        
+        tr:hover {
+            background: #f8f9fa;
+        }
+        
+        tr:nth-child(even) {
+            background: #fafafa;
+        }
+        
+        tr:nth-child(even):hover {
+            background: #f0f0f0;
+        }
+        
+        .metric-value {
+            font-weight: bold;
+        }
+        
+        .success {
+            color: #28a745;
+        }
+        
+        .warning {
+            color: #ffc107;
+        }
+        
+        .error {
+            color: #dc3545;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            margin: 2px;
+        }
+        
+        .btn-primary {
+            background: #007bff;
+            color: white;
+        }
+        
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+        
+        .btn-warning {
+            background: #ffc107;
+            color: #212529;
+        }
+        
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        .stats-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-box {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .pagination button {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .pagination button:hover {
+            background: #f8f9fa;
+        }
+        
+        .pagination button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .pagination .current-page {
+            background: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+            font-style: italic;
+        }
+        
+        @media (max-width: 768px) {
+            .filters {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .filter-group input[type="text"] {
+                min-width: auto;
+            }
+            
+            .table-container {
+                max-height: 60vh;
+            }
+            
+            th, td {
+                padding: 8px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔍 MyJobBuddy - Detailed Monitoring</h1>
+            <div class="nav-links">
+                <a href="/monitoring" class="nav-link">🏠 Main Dashboard</a>
+                <a href="/monitoring/batch-analysis.html" class="nav-link">🔥 Batch Analysis</a>
+                <a href="/monitoring/historical.html" class="nav-link">📈 Historical</a>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('domains')">🌐 All Domains</button>
+            <button class="tab" onclick="showTab('users')">👥 All Users</button>
+            <button class="tab" onclick="showTab('jobtitles')">💼 All Job Titles</button>
+            <button class="tab" onclick="showTab('steps')">⚡ All Steps</button>
+        </div>
+
+        <div id="domains-tab" class="tab-content active">
+            <div class="card">
+                <h3>🌐 Domain Statistics</h3>
+                
+                <div class="stats-summary" id="domains-summary">
+                    <div class="stat-box">
+                        <div class="stat-number" id="total-domains">-</div>
+                        <div class="stat-label">Total Domains</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number" id="avg-success-rate">-</div>
+                        <div class="stat-label">Avg Success Rate</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number" id="total-requests">-</div>
+                        <div class="stat-label">Total Requests</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number" id="avg-response-time">-</div>
+                        <div class="stat-label">Avg Response Time</div>
+                    </div>
+                </div>
+                
+                <div class="filters">
+                    <div class="filter-group">
+                        <label>Sort by</label>
+                        <select id="domains-sort" onchange="loadDomains()">
+                            <option value="requests">Requests</option>
+                            <option value="time">Response Time</option>
+                            <option value="success">Success Rate</option>
+                            <option value="recent">Most Recent</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Period</label>
+                        <select id="domains-period" onchange="loadDomains()">
+                            <option value="all">All Time</option>
+                            <option value="today">Today</option>
+                            <option value="week">This Week</option>
+                            <option value="month">This Month</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Search Domain</label>
+                        <input type="text" id="domains-filter" placeholder="Filter domains..." onkeyup="debounceFilter('domains')">
+                    </div>
+                    <div class="filter-group">
+                        <label>Items per page</label>
+                        <select id="domains-limit" onchange="loadDomains()">
+                            <option value="50">50</option>
+                            <option value="100" selected>100</option>
+                            <option value="200">200</option>
+                            <option value="500">500</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Actions</label>
+                        <div>
+                            <button class="btn btn-primary" onclick="refreshData()">🔄 Refresh</button>
+                            <button class="btn btn-success" onclick="exportData('domains', 'csv')">📊 Export CSV</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="table-container">
+                    <table id="domains-table">
+                        <thead>
+                            <tr>
+                                <th class="sortable" onclick="sortTable('domains', 0)">Domain</th>
+                                <th class="sortable" onclick="sortTable('domains', 1)">Total Requests</th>
+                                <th class="sortable" onclick="sortTable('domains', 2)">Avg Time</th>
+                                <th class="sortable" onclick="sortTable('domains', 3)">Success Rate</th>
+                                <th class="sortable" onclick="sortTable('domains', 4)">Last Step</th>
+                                <th class="sortable" onclick="sortTable('domains', 5)">Unique Users</th>
+                                <th class="sortable" onclick="sortTable('domains', 6)">Today</th>
+                                <th class="sortable" onclick="sortTable('domains', 7)">This Week</th>
+                                <th class="sortable" onclick="sortTable('domains', 8)">This Month</th>
+                            </tr>
+                        </thead>
+                        <tbody id="domains-tbody">
+                            <tr><td colspan="9" class="loading">Loading domains...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="pagination" id="domains-pagination"></div>
+            </div>
+        </div>
+
+        <div id="users-tab" class="tab-content">
+            <div class="card">
+                <h3>👥 User Statistics</h3>
+                
+                <div class="stats-summary" id="users-summary">
+                    <div class="stat-box">
+                        <div class="stat-number" id="total-users">-</div>
+                        <div class="stat-label">Total Users</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number" id="free-users">-</div>
+                        <div class="stat-label">Free Plan</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number" id="pro-users">-</div>
+                        <div class="stat-label">Pro Plan</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number" id="premium-users">-</div>
+                        <div class="stat-label">Premium Plan</div>
+                    </div>
+                </div>
+                
+                <div class="filters">
+                    <div class="filter-group">
+                        <label>Sort by</label>
+                        <select id="users-sort" onchange="loadUsers()">
+                            <option value="requests">Total Requests</option>
+                            <option value="domains">Total Domains</option>
+                            <option value="recent">Most Recent</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Plan Filter</label>
+                        <select id="users-plan" onchange="loadUsers()">
+                            <option value="all">All Plans</option>
+                            <option value="free">Free</option>
+                            <option value="pro">Pro</option>
+                            <option value="premium">Premium</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Items per page</label>
+                        <select id="users-limit" onchange="loadUsers()">
+                            <option value="50">50</option>
+                            <option value="100" selected>100</option>
+                            <option value="200">200</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Actions</label>
+                        <div>
+                            <button class="btn btn-primary" onclick="refreshData()">🔄 Refresh</button>
+                            <button class="btn btn-success" onclick="exportData('users', 'csv')">📊 Export CSV</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="table-container">
+                    <table id="users-table">
+                        <thead>
+                            <tr>
+                                <th class="sortable" onclick="sortTable('users', 0)">User ID</th>
+                                <th class="sortable" onclick="sortTable('users', 1)">Plan</th>
+                                <th class="sortable" onclick="sortTable('users', 2)">Total Requests</th>
+                                <th class="sortable" onclick="sortTable('users', 3)">Total Domains</th>
+                                <th class="sortable" onclick="sortTable('users', 4)">Today</th>
+                                <th class="sortable" onclick="sortTable('users', 5)">This Week</th>
+                                <th class="sortable" onclick="sortTable('users', 6)">This Month</th>
+                                <th class="sortable" onclick="sortTable('users', 7)">Last Activity</th>
+                            </tr>
+                        </thead>
+                        <tbody id="users-tbody">
+                            <tr><td colspan="8" class="loading">Loading users...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="pagination" id="users-pagination"></div>
+            </div>
+        </div>
+
+        <div id="jobtitles-tab" class="tab-content">
+            <div class="card">
+                <h3>💼 Job Titles Statistics</h3>
+                
+                <div class="stats-summary" id="jobtitles-summary">
+                    <div class="stat-box">
+                        <div class="stat-number" id="total-jobtitles">-</div>
+                        <div class="stat-label">Unique Job Titles</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number" id="total-searches">-</div>
+                        <div class="stat-label">Total Searches</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number" id="avg-variations">-</div>
+                        <div class="stat-label">Avg Variations</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number" id="top-category">-</div>
+                        <div class="stat-label">Top Category</div>
+                    </div>
+                </div>
+                
+                <div class="filters">
+                    <div class="filter-group">
+                        <label>Search Job Title</label>
+                        <input type="text" id="jobtitles-filter" placeholder="Filter job titles..." onkeyup="debounceFilter('jobtitles')">
+                    </div>
+                    <div class="filter-group">
+                        <label>Items per page</label>
+                        <select id="jobtitles-limit" onchange="loadJobTitles()">
+                            <option value="50">50</option>
+                            <option value="100" selected>100</option>
+                            <option value="200">200</option>
+                            <option value="500">500</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Actions</label>
+                        <div>
+                            <button class="btn btn-primary" onclick="refreshData()">🔄 Refresh</button>
+                            <button class="btn btn-success" onclick="exportData('jobtitles', 'csv')">📊 Export CSV</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="table-container">
+                    <table id="jobtitles-table">
+                        <thead>
+                            <tr>
+                                <th class="sortable" onclick="sortTable('jobtitles', 0)">Job Title</th>
+                                <th class="sortable" onclick="sortTable('jobtitles', 1)">Count</th>
+                                <th class="sortable" onclick="sortTable('jobtitles', 2)">Variations</th>
+                                <th class="sortable" onclick="sortTable('jobtitles', 3)">Percentage</th>
+                            </tr>
+                        </thead>
+                        <tbody id="jobtitles-tbody">
+                            <tr><td colspan="4" class="loading">Loading job titles...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="pagination" id="jobtitles-pagination"></div>
+            </div>
+        </div>
+
+        <div id="steps-tab" class="tab-content">
+            <div class="card">
+                <h3>⚡ Step Performance</h3>
+                
+                <div class="stats-summary" id="steps-summary">
+                    <div class="stat-box">
+                        <div class="stat-number" id="total-steps">-</div>
+                        <div class="stat-label">Total Steps</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number" id="total-calls">-</div>
+                        <div class="stat-label">Total Calls</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number" id="overall-success">-</div>
+                        <div class="stat-label">Overall Success</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number" id="avg-step-time">-</div>
+                        <div class="stat-label">Avg Step Time</div>
+                    </div>
+                </div>
+                
+                <div class="filters">
+                    <div class="filter-group">
+                        <label>Search Step</label>
+                        <input type="text" id="steps-filter" placeholder="Filter steps..." onkeyup="debounceFilter('steps')">
+                    </div>
+                    <div class="filter-group">
+                        <label>Actions</label>
+                        <div>
+                            <button class="btn btn-primary" onclick="refreshData()">🔄 Refresh</button>
+                            <button class="btn btn-success" onclick="exportData('steps', 'csv')">📊 Export CSV</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="table-container">
+                    <table id="steps-table">
+                        <thead>
+                            <tr>
+                                <th class="sortable" onclick="sortTable('steps', 0)">Step Name</th>
+                                <th class="sortable" onclick="sortTable('steps', 1)">Total Calls</th>
+                                <th class="sortable" onclick="sortTable('steps', 2)">Avg Time</th>
+                                <th class="sortable" onclick="sortTable('steps', 3)">Success Rate</th>
+                                <th class="sortable" onclick="sortTable('steps', 4)">Min Time</th>
+                                <th class="sortable" onclick="sortTable('steps', 5)">Max Time</th>
+                            </tr>
+                        </thead>
+                        <tbody id="steps-tbody">
+                            <tr><td colspan="6" class="loading">Loading steps...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentData = {
+            domains: [],
+            users: [],
+            jobtitles: [],
+            steps: []
+        };
+        
+        let currentSort = {
+            domains: { column: -1, direction: 'asc' },
+            users: { column: -1, direction: 'asc' },
+            jobtitles: { column: -1, direction: 'asc' },
+            steps: { column: -1, direction: 'asc' }
+        };
+        
+        let filterTimeouts = {};
+
+        async function init() {
+            await loadAllData();
+        }
+
+        async function loadAllData() {
+            await Promise.all([
+                loadDomains(),
+                loadUsers(),
+                loadJobTitles(),
+                loadSteps()
+            ]);
+        }
+
+        async function refreshData() {
+            const activeTab = document.querySelector('.tab.active').textContent.trim();
+            
+            if (activeTab.includes('Domains')) {
+                await loadDomains();
+            } else if (activeTab.includes('Users')) {
+                await loadUsers();
+            } else if (activeTab.includes('Job Titles')) {
+                await loadJobTitles();
+            } else if (activeTab.includes('Steps')) {
+                await loadSteps();
+            }
+        }
+
+        async function loadDomains() {
+            try {
+                const sort = document.getElementById('domains-sort').value;
+                const period = document.getElementById('domains-period').value;
+                const filter = document.getElementById('domains-filter').value;
+                const limit = document.getElementById('domains-limit').value;
+                
+                const response = await fetch(`/monitoring/api/domains?sort=${sort}&period=${period}&limit=${limit}&filter=${encodeURIComponent(filter)}`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    currentData.domains = data.data.domains;
+                    updateDomainsTable();
+                    updateDomainsSummary(data.data);
+                } else {
+                    showError('domains-tbody', 'Failed to load domains');
+                }
+            } catch (error) {
+                console.error('Failed to load domains:', error);
+                showError('domains-tbody', 'Failed to load domains: ' + error.message);
+            }
+        }
+
+        async function loadUsers() {
+            try {
+                const sort = document.getElementById('users-sort').value;
+                const plan = document.getElementById('users-plan').value;
+                const limit = document.getElementById('users-limit').value;
+                
+                const response = await fetch(`/monitoring/api/users?sort=${sort}&plan=${plan}&limit=${limit}`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    currentData.users = data.data.users;
+                    updateUsersTable();
+                    updateUsersSummary(data.data);
+                } else {
+                    showError('users-tbody', 'Failed to load users');
+                }
+            } catch (error) {
+                console.error('Failed to load users:', error);
+                showError('users-tbody', 'Failed to load users: ' + error.message);
+            }
+        }
+
+        async function loadJobTitles() {
+            try {
+                const limit = document.getElementById('jobtitles-limit').value;
+                const filter = document.getElementById('jobtitles-filter').value;
+                
+                const response = await fetch(`/monitoring/api/jobtitles?limit=${limit}`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    let jobTitles = data.data.jobTitles;
+                    
+                    if (filter) {
+                        jobTitles = jobTitles.filter(job => 
+                            job.title.toLowerCase().includes(filter.toLowerCase())
+                        );
+                    }
+                    
+                    currentData.jobtitles = jobTitles;
+                    updateJobTitlesTable();
+                    updateJobTitlesSummary(data.data);
+                } else {
+                    showError('jobtitles-tbody', 'Failed to load job titles');
+                }
+            } catch (error) {
+                console.error('Failed to load job titles:', error);
+                showError('jobtitles-tbody', 'Failed to load job titles: ' + error.message);
+            }
+        }
+
+        async function loadSteps() {
+            try {
+                const response = await fetch('/monitoring/api/performance');
+                const data = await response.json();
+                
+                if (data.success) {
+                    const filter = document.getElementById('steps-filter').value;
+                    let steps = data.data.steps || [];
+                    
+                    if (filter) {
+                        steps = steps.filter(step => 
+                            step.step.toLowerCase().includes(filter.toLowerCase())
+                        );
+                    }
+                    
+                    currentData.steps = steps;
+                    updateStepsTable();
+                    updateStepsSummary(steps);
+                } else {
+                    showError('steps-tbody', 'Failed to load steps');
+                }
+            } catch (error) {
+                console.error('Failed to load steps:', error);
+                showError('steps-tbody', 'Failed to load steps: ' + error.message);
+            }
+        }
+
+        function updateDomainsTable() {
+            const tbody = document.getElementById('domains-tbody');
+            
+            if (currentData.domains.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="9" class="no-data">No domains found</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = currentData.domains.map(domain => `
+                <tr>
+                    <td>${domain.domain}</td>
+                    <td class="metric-value">${domain.totalRequests}</td>
+                    <td>${domain.avgTime}</td>
+                    <td class="${getSuccessClass(domain.successRate)}">${domain.successRate}</td>
+                    <td>${domain.lastStep}</td>
+                    <td>${domain.uniqueUsers}</td>
+                    <td>${domain.requestsToday || 0}</td>
+                    <td>${domain.requestsThisWeek || 0}</td>
+                    <td>${domain.requestsThisMonth || 0}</td>
+                </tr>
+            `).join('');
+        }
+
+        function updateUsersTable() {
+            const tbody = document.getElementById('users-tbody');
+            
+            if (currentData.users.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" class="no-data">No users found</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = currentData.users.map(user => `
+                <tr>
+                    <td>${user.userId}</td>
+                    <td><span class="badge ${getPlanClass(user.plan)}">${user.plan}</span></td>
+                    <td class="metric-value">${user.totalRequests}</td>
+                    <td>${user.totalDomains}</td>
+                    <td>${user.requestsToday || 0}</td>
+                    <td>${user.requestsThisWeek || 0}</td>
+                    <td>${user.requestsThisMonth || 0}</td>
+                    <td>${formatDate(user.lastActivity)}</td>
+                </tr>
+            `).join('');
+        }
+
+        function updateJobTitlesTable() {
+            const tbody = document.getElementById('jobtitles-tbody');
+            
+            if (currentData.jobtitles.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" class="no-data">No job titles found</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = currentData.jobtitles.map(job => `
+                <tr>
+                    <td>${job.title}</td>
+                    <td class="metric-value">${job.count}</td>
+                    <td>${job.variations}</td>
+                    <td>${job.percentage}%</td>
+                </tr>
+            `).join('');
+        }
+
+        function updateStepsTable() {
+            const tbody = document.getElementById('steps-tbody');
+            
+            if (currentData.steps.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="no-data">No steps found</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = currentData.steps.map(step => `
+                <tr>
+                    <td>${step.step}</td>
+                    <td class="metric-value">${step.calls}</td>
+                    <td>${step.avgTime}</td>
+                    <td class="${getSuccessClass(step.successRate)}">${step.successRate}</td>
+                    <td>${step.minTime || 'N/A'}</td>
+                    <td>${step.maxTime || 'N/A'}</td>
+                </tr>
+            `).join('');
+        }
+
+        function updateDomainsSummary(data) {
+            document.getElementById('total-domains').textContent = data.total || 0;
+            document.getElementById('total-requests').textContent = data.domains.reduce((sum, d) => sum + d.totalRequests, 0);
+            
+            const avgSuccess = data.domains.length > 0 
+                ? Math.round(data.domains.reduce((sum, d) => sum + parseFloat(d.successRate), 0) / data.domains.length)
+                : 0;
+            document.getElementById('avg-success-rate').textContent = avgSuccess + '%';
+            
+            const avgTime = data.domains.length > 0 
+                ? (data.domains.reduce((sum, d) => sum + parseFloat(d.avgTime), 0) / data.domains.length).toFixed(1)
+                : 0;
+            document.getElementById('avg-response-time').textContent = avgTime + 's';
+        }
+
+        function updateUsersSummary(data) {
+            document.getElementById('total-users').textContent = data.total || 0;
+            document.getElementById('free-users').textContent = data.planDistribution?.free || 0;
+            document.getElementById('pro-users').textContent = data.planDistribution?.pro || 0;
+            document.getElementById('premium-users').textContent = data.planDistribution?.premium || 0;
+        }
+
+        function updateJobTitlesSummary(data) {
+            document.getElementById('total-jobtitles').textContent = data.total || 0;
+            document.getElementById('total-searches').textContent = data.jobTitles.reduce((sum, j) => sum + j.count, 0);
+            
+            const avgVariations = data.jobTitles.length > 0 
+                ? (data.jobTitles.reduce((sum, j) => sum + j.variations, 0) / data.jobTitles.length).toFixed(1)
+                : 0;
+            document.getElementById('avg-variations').textContent = avgVariations;
+            
+            const topTitle = data.jobTitles.length > 0 ? data.jobTitles[0].title : 'N/A';
+            document.getElementById('top-category').textContent = topTitle.substring(0, 15) + (topTitle.length > 15 ? '...' : '');
+        }
+
+        function updateStepsSummary(steps) {
+            document.getElementById('total-steps').textContent = steps.length;
+            document.getElementById('total-calls').textContent = steps.reduce((sum, s) => sum + parseInt(s.calls), 0);
+            
+            const overallSuccess = steps.length > 0 
+                ? Math.round(steps.reduce((sum, s) => sum + parseFloat(s.successRate), 0) / steps.length)
+                : 0;
+            document.getElementById('overall-success').textContent = overallSuccess + '%';
+            
+            const avgTime = steps.length > 0 
+                ? (steps.reduce((sum, s) => sum + parseFloat(s.avgTime), 0) / steps.length).toFixed(1)
+                : 0;
+            document.getElementById('avg-step-time').textContent = avgTime + 's';
+        }
+
+        function showTab(tabName) {
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(tabName + '-tab').classList.add('active');
+            
+            if (window.location.hash !== '#' + tabName) {
+                window.location.hash = '#' + tabName;
+            }
+        }
+
+        function sortTable(tableType, columnIndex) {
+            const currentSortState = currentSort[tableType];
+            
+            if (currentSortState.column === columnIndex) {
+                currentSortState.direction = currentSortState.direction === 'asc' ? 'desc' : 'asc';
+            } else {
+                currentSortState.column = columnIndex;
+                currentSortState.direction = 'asc';
+            }
+            
+            const data = currentData[tableType];
+            
+            data.sort((a, b) => {
+                const aVal = Object.values(a)[columnIndex];
+                const bVal = Object.values(b)[columnIndex];
+                
+                let comparison = 0;
+                if (typeof aVal === 'number' && typeof bVal === 'number') {
+                    comparison = aVal - bVal;
+                } else {
+                    comparison = String(aVal).localeCompare(String(bVal));
+                }
+                
+                return currentSortState.direction === 'asc' ? comparison : -comparison;
+            });
+            
+            updateTableForType(tableType);
+            updateSortIndicators(tableType, columnIndex);
+        }
+
+        function updateTableForType(tableType) {
+            switch (tableType) {
+                case 'domains':
+                    updateDomainsTable();
+                    break;
+                case 'users':
+                    updateUsersTable();
+                    break;
+                case 'jobtitles':
+                    updateJobTitlesTable();
+                    break;
+                case 'steps':
+                    updateStepsTable();
+                    break;
+            }
+        }
+
+        function updateSortIndicators(tableType, columnIndex) {
+            const table = document.getElementById(tableType + '-table');
+            const headers = table.querySelectorAll('th');
+            
+            headers.forEach((header, index) => {
+                header.classList.remove('sort-asc', 'sort-desc');
+                if (index === columnIndex) {
+                    header.classList.add(currentSort[tableType].direction === 'asc' ? 'sort-asc' : 'sort-desc');
+                }
+            });
+        }
+
+        function debounceFilter(type) {
+            if (filterTimeouts[type]) {
+                clearTimeout(filterTimeouts[type]);
+            }
+            
+            filterTimeouts[type] = setTimeout(() => {
+                switch (type) {
+                    case 'domains':
+                        loadDomains();
+                        break;
+                    case 'jobtitles':
+                        loadJobTitles();
+                        break;
+                    case 'steps':
+                        loadSteps();
+                        break;
+                }
+            }, 500);
+        }
+
+        async function exportData(type, format) {
+            try {
+                window.open(`/monitoring/api/export/${format}?type=${type}`, '_blank');
+            } catch (error) {
+                alert('Export failed: ' + error.message);
+            }
+        }
+
+        function getSuccessClass(rate) {
+            if (typeof rate === 'string') {
+                rate = parseFloat(rate.replace('%', ''));
+            }
+            if (rate >= 90) return 'success';
+            if (rate >= 70) return 'warning';
+            return 'error';
+        }
+
+        function getPlanClass(plan) {
+            switch (plan) {
+                case 'premium': return 'premium';
+                case 'pro': return 'pro';
+                default: return 'free';
+            }
+        }
+
+        function formatDate(timestamp) {
+            if (!timestamp) return 'N/A';
+            return new Date(timestamp).toLocaleDateString() + ' ' + new Date(timestamp).toLocaleTimeString();
+        }
+
+        function showError(tbodyId, message) {
+            const tbody = document.getElementById(tbodyId);
+            const colspan = tbody.closest('table').querySelectorAll('th').length;
+            tbody.innerHTML = `<tr><td colspan="${colspan}" class="error">${message}</td></tr>`;
+        }
+
+        window.addEventListener('load', () => {
+            const hash = window.location.hash.slice(1);
+            if (hash && ['domains', 'users', 'jobtitles', 'steps'].includes(hash)) {
+                showTab(hash);
+            }
+            init();
+        });
+    </script>
+</body>
+</html>

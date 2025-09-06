@@ -1,0 +1,87 @@
+const MAP = {
+    smartrecruiters: 'SmartRecruiters',
+    smartrecruiter: 'SmartRecruiters',
+    'jobs.smartrecruiters': 'SmartRecruiters',
+    icims: 'iCIMS',
+    'careers.icims': 'iCIMS',
+    'jobs.icims': 'iCIMS',
+    bamboohr: 'BambooHR',
+    'bamboo hr': 'BambooHR',
+    'bamboo-hr': 'BambooHR',
+    jazzhr: 'JazzHR',
+    applytojob: 'JazzHR',
+    'applytojob.com': 'JazzHR',
+    zoho: 'ZohoRecruit',
+    zohorecruit: 'ZohoRecruit',
+    'zoho recruit': 'ZohoRecruit',
+    'zoho-recruit': 'ZohoRecruit',
+    'zoho_recruit': 'ZohoRecruit',
+    'recruit.zoho': 'ZohoRecruit',
+    teamtailor: 'TeamTailor',
+    'team-tailor': 'TeamTailor',
+    'career.teamtailor': 'TeamTailor',
+    greenhouse: 'Greenhouse',
+    'boards.greenhouse': 'Greenhouse',
+    'job-boards.greenhouse': 'Greenhouse',
+    'greenhouse.io': 'Greenhouse',
+    lever: 'Lever',
+    'jobs.lever': 'Lever',
+    'jobs.lever.co': 'Lever',
+    workable: 'Workable',
+    'apply.workable': 'Workable',
+    'careers-page.workable': 'Workable',
+    'jobs.workable': 'Workable',
+    workday: 'Workday',
+    myworkday: 'Workday',
+    myworkdayjobs: 'Workday',
+    workdayjobs: 'Workday',
+    'myworkdayjobs.com': 'Workday',
+    jobvite: 'Jobvite',
+    'jobs.jobvite': 'Jobvite',
+    'jobvite.com': 'Jobvite',
+    brassring: 'Brassring',
+    kenexa: 'Brassring',
+    'kenexa.brassring': 'Brassring',
+    'ibm.brassring': 'Brassring',
+    adp: 'ADP',
+    'recruiting.adp': 'ADP',
+    'workforcenow.adp': 'ADP',
+    'jobs.adp': 'ADP',
+    workforcenow: 'ADP',
+    wordpress: 'WordPress',
+    wp: 'WordPress',
+    'wp-content': 'WordPress',
+    taleo: 'Taleo',
+    'taleo.net': 'Taleo',
+    'tbe.taleo': 'Taleo',
+    ashby: 'Ashby',
+    ashbyhq: 'Ashby',
+    'ashbyhq.com': 'Ashby',
+    'jobs.ashbyhq': 'Ashby',
+    personio: 'Personio',
+    'jobs.personio': 'Personio',
+    'personio.de': 'Personio',
+    recruitee: 'Recruitee',
+    'recruitee.com': 'Recruitee',
+    powershift: 'Powershift',
+    'powershift.co.uk': 'Powershift',
+    drupal: 'Drupal',
+    'drupal.org': 'Drupal',
+    shopify: 'Shopify',
+    'shopify.com': 'Shopify',
+    unknown: 'unknown',
+    custom: 'custom'
+  };
+  
+  function normalize(name) {
+    if (!name) return null;
+    
+    const key = String(name).toLowerCase().trim()
+      .replace(/\s+/g, '')
+      .replace(/^https?:\/\/(www\.)?/, '')
+      .replace(/\/$/, '');
+    
+    return MAP[key] || MAP[key.replace(/\./g, '').replace(/\/.*$/, '')] || name;
+  }
+  
+  module.exports = { MAP, normalize };

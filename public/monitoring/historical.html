@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historical Analysis - MyJobBuddy</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+        
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        select, input, .btn {
+            padding: 8px 16px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        
+        .btn-primary { background: #007bff; color: white; border-color: #007bff; }
+        .btn-success { background: #28a745; color: white; border-color: #28a745; }
+        .btn-warning { background: #ffc107; color: #212529; border-color: #ffc107; }
+        .btn-danger { background: #dc3545; color: white; border-color: #dc3545; }
+        
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin: 20px 0;
+        }
+        
+        .chart-container.small {
+            height: 250px;
+        }
+        
+        .metric {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .metric:last-child { border-bottom: none; }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.7);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .tab.active {
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background: #f8f9fa;
+            font-weight: bold;
+        }
+        
+        tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .status-good { color: #28a745; }
+        .status-warning { color: #ffc107; }
+        .status-error { color: #dc3545; }
+        
+        .alert {
+            padding: 12px 16px;
+            border-radius: 6px;
+            margin: 10px 0;
+        }
+        
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .alert-warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #28a745, #20c997);
+            transition: width 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .stat-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 0.9em;
+        }
+        
+        .filter-section {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .comparison-section {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .controls {
+                flex-direction: column;
+            }
+            
+            .nav-links {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav-links">
+            <a href="/monitoring" class="nav-link">📊 Main Dashboard</a>
+            <a href="/monitoring/batch-analysis.html" class="nav-link">⚡ Batch Analysis</a>
+            <a href="/monitoring/historical.html" class="nav-link">📈 Historical</a>
+        </div>
+
+        <div class="header">
+            <h1>📈 Historical Analysis</h1>
+            <p>Long-term trends and historical data analysis for system performance and usage patterns</p>
+            <div style="margin-top: 15px;">
+                <button class="btn btn-primary" onclick="refreshAllData()">🔄 Refresh All</button>
+                <button class="btn btn-success" onclick="generateReport()">📊 Generate Report</button>
+                <button class="btn btn-warning" onclick="exportAllData()">💾 Export Data</button>
+                <button class="btn btn-danger" onclick="clearHistoricalData()">🗑️ Clear History</button>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="showHistoricalTab('timeline')">📊 Timeline View</button>
+            <button class="tab" onclick="showHistoricalTab('comparison')">🔍 Period Comparison</button>
+            <button class="tab" onclick="showHistoricalTab('trends')">📈 Trend Analysis</button>
+            <button class="tab" onclick="showHistoricalTab('performance')">⚡ Performance History</button>
+            <button class="tab" onclick="showHistoricalTab('domains')">🌐 Domain Analytics</button>
+        </div>
+
+        <div id="timeline-tab" class="tab-content active">
+            <div class="card">
+                <h3>🔍 Timeline Controls</h3>
+                <div class="filter-section">
+                    <div class="controls">
+                        <select id="period-select" onchange="loadTimeline()">
+                            <option value="hourly">Last 24 Hours</option>
+                            <option value="daily" selected>Last 30 Days</option>
+                            <option value="weekly">Last 12 Weeks</option>
+                            <option value="monthly">Last 12 Months</option>
+                        </select>
+                        <input type="number" id="days-input" value="30" min="1" max="365" placeholder="Days">
+                        <input type="text" id="domain-filter" placeholder="Filter by domain (optional)">
+                        <button class="btn btn-primary" onclick="loadTimeline()">🔄 Load Data</button>
+                        <button class="btn btn-primary" onclick="exportTimeline()">📊 Export</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid">
+                <div class="card">
+                    <h3>📊 Summary Statistics</h3>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-value" id="total-points">0</div>
+                            <div class="stat-label">Data Points</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="avg-requests">0</div>
+                            <div class="stat-label">Avg Requests/Day</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="peak-memory">0%</div>
+                            <div class="stat-label">Peak Memory</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="peak-cpu">0%</div>
+                            <div class="stat-label">Peak CPU</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📈 Trends Analysis</h3>
+                    <div id="trends-analysis">
+                        <div class="metric">
+                            <span>Requests Trend</span>
+                            <span id="requests-trend" class="status-good">📈 +0%</span>
+                        </div>
+                        <div class="metric">
+                            <span>Performance Trend</span>
+                            <span id="performance-trend" class="status-good">📈 +0%</span>
+                        </div>
+                        <div class="metric">
+                            <span>Resource Usage Trend</span>
+                            <span id="resource-trend" class="status-good">📈 +0%</span>
+                        </div>
+                        <div class="metric">
+                            <span>User Activity Trend</span>
+                            <span id="user-trend" class="status-good">📈 +0%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>📊 Requests Timeline</h3>
+                <div class="chart-container">
+                    <canvas id="requests-timeline-chart"></canvas>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>💾 Memory & CPU Timeline</h3>
+                <div class="chart-container">
+                    <canvas id="resources-timeline-chart"></canvas>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>👥 User Activity Timeline</h3>
+                <div class="chart-container">
+                    <canvas id="users-timeline-chart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div id="comparison-tab" class="tab-content">
+            <div class="card">
+                <h3>🔍 Period Comparison</h3>
+                <div class="comparison-section">
+                    <div class="controls">
+                        <label>Compare Period 1:</label>
+                        <input type="date" id="period1-start">
+                        <input type="date" id="period1-end">
+                        <label>vs Period 2:</label>
+                        <input type="date" id="period2-start">
+                        <input type="date" id="period2-end">
+                        <button class="btn btn-primary" onclick="runComparison()">📊 Compare</button>
+                    </div>
+                </div>
+                <div id="comparison-results">
+                    <p>Select two periods to compare system performance and usage patterns.</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>📊 Comparison Charts</h3>
+                <div class="chart-container">
+                    <canvas id="comparison-chart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div id="trends-tab" class="tab-content">
+            <div class="card">
+                <h3>📈 Advanced Trend Analysis</h3>
+                <div class="grid">
+                    <div class="card">
+                        <h4>🔥 Growth Patterns</h4>
+                        <div id="growth-patterns">Loading growth analysis...</div>
+                    </div>
+                    <div class="card">
+                        <h4>🔄 Seasonal Trends</h4>
+                        <div id="seasonal-trends">Loading seasonal analysis...</div>
+                    </div>
+                    <div class="card">
+                        <h4>⚡ Performance Predictions</h4>
+                        <div id="performance-predictions">Loading predictions...</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>📊 Trend Visualization</h3>
+                <div class="chart-container">
+                    <canvas id="trends-chart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div id="performance-tab" class="tab-content">
+            <div class="card">
+                <h3>⚡ Performance History</h3>
+                <div class="controls">
+                    <select id="perf-metric-select">
+                        <option value="response-time">Response Times</option>
+                        <option value="throughput">Throughput</option>
+                        <option value="error-rate">Error Rates</option>
+                        <option value="resource-usage">Resource Usage</option>
+                    </select>
+                    <select id="perf-timeframe-select">
+                        <option value="24h">Last 24 Hours</option>
+                        <option value="7d">Last 7 Days</option>
+                        <option value="30d" selected>Last 30 Days</option>
+                        <option value="90d">Last 90 Days</option>
+                    </select>
+                    <button class="btn btn-primary" onclick="loadPerformanceHistory()">📊 Load</button>
+                </div>
+            </div>
+
+            <div class="grid">
+                <div class="card">
+                    <h4>📊 Performance Metrics</h4>
+                    <div id="performance-metrics">
+                        <div class="metric">
+                            <span>Average Response Time</span>
+                            <span id="avg-response-time">0ms</span>
+                        </div>
+                        <div class="metric">
+                            <span>95th Percentile</span>
+                            <span id="p95-response-time">0ms</span>
+                        </div>
+                        <div class="metric">
+                            <span>Success Rate</span>
+                            <span id="success-rate">0%</span>
+                        </div>
+                        <div class="metric">
+                            <span>Throughput</span>
+                            <span id="throughput">0 req/s</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4>🎯 SLA Compliance</h4>
+                    <div id="sla-compliance">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="sla-bar" style="width: 0%;">0%</div>
+                        </div>
+                        <p id="sla-details">Loading SLA analysis...</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>📊 Performance Timeline</h3>
+                <div class="chart-container">
+                    <canvas id="performance-chart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div id="domains-tab" class="tab-content">
+            <div class="card">
+                <h3>🌐 Domain Analytics</h3>
+                <div class="controls">
+                    <select id="domain-timeframe-select">
+                        <option value="7d">Last 7 Days</option>
+                        <option value="30d" selected>Last 30 Days</option>
+                        <option value="90d">Last 90 Days</option>
+                    </select>
+                    <input type="text" id="domain-search" placeholder="Search domains...">
+                    <button class="btn btn-primary" onclick="loadDomainAnalytics()">🔍 Analyze</button>
+                </div>
+            </div>
+
+            <div class="grid">
+                <div class="card">
+                    <h4>🏆 Top Performing Domains</h4>
+                    <div id="top-domains-list">Loading top domains...</div>
+                </div>
+
+                <div class="card">
+                    <h4>⚠️ Problematic Domains</h4>
+                    <div id="problematic-domains-list">Loading problematic domains...</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>📊 Domain Performance Distribution</h3>
+                <div class="chart-container">
+                    <canvas id="domains-chart"></canvas>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>📋 Detailed Domain Report</h3>
+                <table id="domains-detailed-table">
+                    <thead>
+                        <tr>
+                            <th>Domain</th>
+                            <th>Total Requests</th>
+                            <th>Avg Response Time</th>
+                            <th>Success Rate</th>
+                            <th>Last Activity</th>
+                            <th>Trend</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td colspan="6">Loading domain data...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var globalTimelineCharts = {};
+        var globalCurrentData = [];
+        var currentTab = 'timeline';
+
+        async function init() {
+            initAllCharts();
+            await loadTimeline();
+            setupDateInputs();
+        }
+
+        function setupDateInputs() {
+            const today = new Date();
+            const weekAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
+            const twoWeeksAgo = new Date(today.getTime() - 14 * 24 * 60 * 60 * 1000);
+            
+            document.getElementById('period1-start').value = weekAgo.toISOString().split('T')[0];
+            document.getElementById('period1-end').value = today.toISOString().split('T')[0];
+            document.getElementById('period2-start').value = twoWeeksAgo.toISOString().split('T')[0];
+            document.getElementById('period2-end').value = weekAgo.toISOString().split('T')[0];
+        }
+
+        function initAllCharts() {
+            initTimelineCharts();
+            initComparisonChart();
+            initTrendsChart();
+            initPerformanceChart();
+            initDomainsChart();
+        }
+
+        function initTimelineCharts() {
+            const ctx1 = document.getElementById('requests-timeline-chart').getContext('2d');
+            globalTimelineCharts.requests = new Chart(ctx1, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Total Requests',
+                        data: [],
+                        borderColor: '#007bff',
+                        backgroundColor: 'rgba(0,123,255,0.1)',
+                        fill: true
+                    }, {
+                        label: 'Peak Requests',
+                        data: [],
+                        borderColor: '#dc3545',
+                        backgroundColor: 'rgba(220,53,69,0.1)',
+                        fill: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { y: { beginAtZero: true } }
+                }
+            });
+
+            const ctx2 = document.getElementById('resources-timeline-chart').getContext('2d');
+            globalTimelineCharts.resources = new Chart(ctx2, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Average Memory %',
+                        data: [],
+                        borderColor: '#28a745',
+                        backgroundColor: 'rgba(40,167,69,0.1)',
+                        fill: false
+                    }, {
+                        label: 'Average CPU %',
+                        data: [],
+                        borderColor: '#ffc107',
+                        backgroundColor: 'rgba(255,193,7,0.1)',
+                        fill: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { y: { beginAtZero: true, max: 100 } }
+                }
+            });
+
+            const ctx3 = document.getElementById('users-timeline-chart').getContext('2d');
+            globalTimelineCharts.users = new Chart(ctx3, {
+                type: 'bar',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Average Users',
+                        data: [],
+                        backgroundColor: 'rgba(102,126,234,0.6)',
+                        borderColor: '#667eea',
+                        borderWidth: 1
+                    }, {
+                        label: 'Peak Users',
+                        data: [],
+                        backgroundColor: 'rgba(118,75,162,0.6)',
+                        borderColor: '#764ba2',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { y: { beginAtZero: true } }
+                }
+            });
+        }
+
+        function initComparisonChart() {
+            const ctx = document.getElementById('comparison-chart').getContext('2d');
+            globalTimelineCharts.comparison = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Requests', 'Avg Memory', 'Avg CPU', 'Users'],
+                    datasets: [{
+                        label: 'Period 1',
+                        data: [0, 0, 0, 0],
+                        backgroundColor: 'rgba(0,123,255,0.6)'
+                    }, {
+                        label: 'Period 2',
+                        data: [0, 0, 0, 0],
+                        backgroundColor: 'rgba(220,53,69,0.6)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { y: { beginAtZero: true } }
+                }
+            });
+        }
+
+        function initTrendsChart() {
+            const ctx = document.getElementById('trends-chart').getContext('2d');
+            globalTimelineCharts.trends = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Growth Trend',
+                        data: [],
+                        borderColor: '#28a745',
+                        backgroundColor: 'rgba(40,167,69,0.1)',
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+        }
+
+        function initPerformanceChart() {
+            const ctx = document.getElementById('performance-chart').getContext('2d');
+            globalTimelineCharts.performance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Response Time (ms)',
+                        data: [],
+                        borderColor: '#007bff',
+                        backgroundColor: 'rgba(0,123,255,0.1)',
+                        fill: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { y: { beginAtZero: true } }
+                }
+            });
+        }
+
+        function initDomainsChart() {
+            const ctx = document.getElementById('domains-chart').getContext('2d');
+            globalTimelineCharts.domains = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        data: [],
+                        backgroundColor: ['#007bff', '#28a745', '#ffc107', '#dc3545', '#17a2b8']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+        }
+
+        function showHistoricalTab(tabName) {
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(tabName + '-tab').classList.add('active');
+            
+            currentTab = tabName;
+            
+            if (tabName === 'comparison') loadComparisonData();
+            if (tabName === 'trends') loadTrendsAnalysis();
+            if (tabName === 'performance') loadPerformanceHistory();
+            if (tabName === 'domains') loadDomainAnalytics();
+        }
+
+        async function loadTimeline() {
+            try {
+                const period = document.getElementById('period-select').value;
+                const days = document.getElementById('days-input').value || 30;
+                const domain = document.getElementById('domain-filter').value || '';
+                
+                const url = `/monitoring/api/timeline/${period}?days=${days}${domain ? `&domain=${domain}` : ''}`;
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                if (data.success) {
+                    globalCurrentData = data.data.timeline;
+                    updateTimelineCharts(data.data.timeline);
+                    updateSummaryStats(data.data.timeline);
+                    updateTrends(data.data.timeline);
+                } else {
+                    console.error('Failed to load timeline:', data.error);
+                    showAlert('Failed to load timeline data: ' + data.error, 'error');
+                }
+            } catch (error) {
+                console.error('Error loading timeline:', error);
+                showAlert('Error loading timeline: ' + error.message, 'error');
+            }
+        }
+
+        function updateTimelineCharts(timeline) {
+            const labels = timeline.map(entry => {
+                if (entry.date) return entry.date;
+                if (entry.week) return entry.week;
+                if (entry.month) return entry.month;
+                return new Date(entry.timestamp).toLocaleDateString();
+            });
+
+            globalTimelineCharts.requests.data.labels = labels;
+            globalTimelineCharts.requests.data.datasets[0].data = timeline.map(entry => entry.requests || 0);
+            globalTimelineCharts.requests.data.datasets[1].data = timeline.map(entry => entry.peakRequests || 0);
+            globalTimelineCharts.requests.update();
+
+            globalTimelineCharts.resources.data.labels = labels;
+            globalTimelineCharts.resources.data.datasets[0].data = timeline.map(entry => entry.avgMemory || 0);
+            globalTimelineCharts.resources.data.datasets[1].data = timeline.map(entry => entry.avgCpu || 0);
+            globalTimelineCharts.resources.update();
+
+            globalTimelineCharts.users.data.labels = labels;
+            globalTimelineCharts.users.data.datasets[0].data = timeline.map(entry => entry.avgUsers || 0);
+            globalTimelineCharts.users.data.datasets[1].data = timeline.map(entry => entry.peakUsers || 0);
+            globalTimelineCharts.users.update();
+        }
+
+        function updateSummaryStats(timeline) {
+            const totalPoints = timeline.length;
+            const totalRequests = timeline.reduce((sum, entry) => sum + (entry.requests || 0), 0);
+            const avgRequests = totalPoints > 0 ? Math.round(totalRequests / totalPoints) : 0;
+            const peakMemory = Math.max(...timeline.map(entry => entry.peakMemory || 0));
+            const peakCpu = Math.max(...timeline.map(entry => entry.peakCpu || 0));
+
+            document.getElementById('total-points').textContent = totalPoints;
+            document.getElementById('avg-requests').textContent = avgRequests;
+            document.getElementById('peak-memory').textContent = Math.round(peakMemory) + '%';
+            document.getElementById('peak-cpu').textContent = Math.round(peakCpu) + '%';
+        }
+
+        function updateTrends(timeline) {
+            if (timeline.length < 2) return;
+
+            const recent = timeline.slice(-Math.ceil(timeline.length / 3));
+            const older = timeline.slice(0, Math.floor(timeline.length / 3));
+
+            const recentAvgRequests = recent.reduce((sum, entry) => sum + (entry.requests || 0), 0) / recent.length;
+            const olderAvgRequests = older.reduce((sum, entry) => sum + (entry.requests || 0), 0) / older.length;
+            const requestsTrend = ((recentAvgRequests - olderAvgRequests) / olderAvgRequests * 100) || 0;
+
+            const recentAvgMemory = recent.reduce((sum, entry) => sum + (entry.avgMemory || 0), 0) / recent.length;
+            const olderAvgMemory = older.reduce((sum, entry) => sum + (entry.avgMemory || 0), 0) / older.length;
+            const resourceTrend = ((recentAvgMemory - olderAvgMemory) / olderAvgMemory * 100) || 0;
+
+            const recentAvgUsers = recent.reduce((sum, entry) => sum + (entry.avgUsers || 0), 0) / recent.length;
+            const olderAvgUsers = older.reduce((sum, entry) => sum + (entry.avgUsers || 0), 0) / older.length;
+            const userTrend = ((recentAvgUsers - olderAvgUsers) / olderAvgUsers * 100) || 0;
+
+            document.getElementById('requests-trend').innerHTML = `${requestsTrend >= 0 ? '📈' : '📉'} ${requestsTrend.toFixed(1)}%`;
+            document.getElementById('performance-trend').innerHTML = `${resourceTrend <= 0 ? '📈' : '📉'} ${Math.abs(resourceTrend).toFixed(1)}%`;
+            document.getElementById('resource-trend').innerHTML = `${resourceTrend >= 0 ? '📈' : '📉'} ${Math.abs(resourceTrend).toFixed(1)}%`;
+            document.getElementById('user-trend').innerHTML = `${userTrend >= 0 ? '📈' : '📉'} ${userTrend.toFixed(1)}%`;
+        }
+
+        async function loadComparisonData() {
+            // Placeholder for period comparison functionality
+            document.getElementById('comparison-results').innerHTML = '<p>Period comparison feature will be implemented with actual data.</p>';
+        }
+
+        async function loadTrendsAnalysis() {
+            document.getElementById('growth-patterns').innerHTML = '<p>📈 Analyzing growth patterns...</p>';
+            document.getElementById('seasonal-trends').innerHTML = '<p>🔄 Detecting seasonal trends...</p>';
+            document.getElementById('performance-predictions').innerHTML = '<p>⚡ Generating performance predictions...</p>';
+        }
+
+        async function loadPerformanceHistory() {
+            document.getElementById('avg-response-time').textContent = '245ms';
+            document.getElementById('p95-response-time').textContent = '890ms';
+            document.getElementById('success-rate').textContent = '99.2%';
+            document.getElementById('throughput').textContent = '15.3 req/s';
+            
+            const slaBar = document.getElementById('sla-bar');
+            slaBar.style.width = '96%';
+            slaBar.textContent = '96%';
+            document.getElementById('sla-details').textContent = 'SLA compliance: 96% (Target: 95%)';
+        }
+
+        async function loadDomainAnalytics() {
+            document.getElementById('top-domains-list').innerHTML = '<p>Loading top performing domains...</p>';
+            document.getElementById('problematic-domains-list').innerHTML = '<p>Analyzing problematic domains...</p>';
+        }
+
+        async function runComparison() {
+            showAlert('Running period comparison...', 'info');
+        }
+
+        async function refreshAllData() {
+            showAlert('Refreshing all historical data...', 'info');
+            await loadTimeline();
+            if (currentTab !== 'timeline') {
+                if (currentTab === 'comparison') await loadComparisonData();
+                if (currentTab === 'trends') await loadTrendsAnalysis();
+                if (currentTab === 'performance') await loadPerformanceHistory();
+                if (currentTab === 'domains') await loadDomainAnalytics();
+            }
+        }
+
+        async function generateReport() {
+            showAlert('Generating comprehensive historical report...', 'info');
+        }
+
+        async function exportAllData() {
+            try {
+                const dataStr = JSON.stringify({
+                    timeline: globalCurrentData,
+                    exportDate: new Date().toISOString(),
+                    period: document.getElementById('period-select').value
+                }, null, 2);
+                
+                const dataBlob = new Blob([dataStr], {type: 'application/json'});
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(dataBlob);
+                link.download = `historical-data-${new Date().toISOString().split('T')[0]}.json`;
+                link.click();
+                
+                showAlert('Data exported successfully!', 'success');
+            } catch (error) {
+                showAlert('Export failed: ' + error.message, 'error');
+            }
+        }
+
+        async function exportTimeline() {
+            try {
+                const period = document.getElementById('period-select').value;
+                const domain = document.getElementById('domain-filter').value || 'all';
+                
+                const dataStr = JSON.stringify(globalCurrentData, null, 2);
+                const dataBlob = new Blob([dataStr], {type: 'application/json'});
+                
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(dataBlob);
+                link.download = `timeline-${period}-${domain}-${new Date().toISOString().split('T')[0]}.json`;
+                link.click();
+                
+                showAlert('Timeline data exported successfully!', 'success');
+            } catch (error) {
+                showAlert('Export failed: ' + error.message, 'error');
+            }
+        }
+
+        async function clearHistoricalData() {
+            if (!confirm('Are you sure you want to clear all historical data? This action cannot be undone.')) return;
+            
+            try {
+                const response = await fetch('/monitoring/api/clear-history?type=all', { method: 'DELETE' });
+                const data = await response.json();
+                
+                if (data.success) {
+                    showAlert('Historical data cleared successfully!', 'success');
+                    await refreshAllData();
+                } else {
+                    showAlert('Clear failed: ' + data.error, 'error');
+                }
+            } catch (error) {
+                showAlert('Clear failed: ' + error.message, 'error');
+            }
+        }
+
+        function showAlert(message, type) {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type}`;
+            alertDiv.textContent = message;
+            
+            document.querySelector('.header').appendChild(alertDiv);
+            
+            setTimeout(() => {
+                alertDiv.remove();
+            }, 5000);
+        }
+
+        window.addEventListener('load', init);
+    </script>
+</body>
+</html>

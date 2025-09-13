@@ -1,0 +1,253 @@
+<div class="pricing-section">
+    <div class="pricing-header">
+        <h2 data-i18n="pricing.title">Choose Your Plan</h2>
+        <p data-i18n="pricing.subtitle">Unlock advanced job search features with our premium plans</p>
+    </div>
+
+    <div class="plan-selector">
+        <div class="duration-toggle">
+            <button class="duration-btn active" data-duration="1" data-i18n="pricing.duration.oneMonth">1 Month</button>
+            <button class="duration-btn" data-duration="3" data-i18n="pricing.duration.threeMonths">3 Months</button>
+            <button class="duration-btn" data-duration="6" data-i18n="pricing.duration.sixMonths">6 Months</button>
+            <button class="duration-btn" data-duration="12" data-i18n="pricing.duration.twelveMonths">12 Months</button>
+        </div>
+    </div>
+
+    <div class="pricing-cards" id="pricing-cards">
+        <div class="pricing-card free-plan">
+            <div class="plan-header">
+                <h3 data-i18n="pricing.plans.free">Free</h3>
+                <div class="price">
+                    <span class="amount">€0</span>
+                    <span class="period" data-i18n="pricing.perMonth">/month</span>
+                </div>
+            </div>
+            <div class="plan-features">
+                <ul>
+                    <li><i class="fas fa-check"></i> <span data-i18n="pricing.features.cacheSearchOnly">Cache search only</span></li>
+                    <li><i class="fas fa-check"></i> <span>10 </span><span data-i18n="pricing.features.careerPages">career pages</span></li>
+                    <li><i class="fas fa-check"></i> <span>2 </span><span data-i18n="pricing.features.jobTitles">job titles</span></li>
+                    <li><i class="fas fa-check"></i> <span>1 </span><span data-i18n="pricing.features.cvBuilder">CV</span></li>
+                    <li><i class="fas fa-check"></i> <span data-i18n="pricing.features.basicTracking">Basic tracking</span></li>
+                </ul>
+            </div>
+            <button class="plan-btn current-plan" disabled data-i18n="pricing.currentPlan">Current Plan</button>
+        </div>
+
+        <div class="pricing-card standard-plan">
+            <div class="plan-badge" data-i18n="pricing.mostPopular">Most Popular</div>
+            <div class="plan-header">
+                <h3 data-i18n="pricing.plans.standard">Standard</h3>
+                <div class="price">
+                    <span class="amount" id="standard-price">€4.99</span>
+                    <span class="period" data-i18n="pricing.perMonth">/month</span>
+                </div>
+                <div class="total-price" id="standard-total" data-i18n="pricing.billedMonthly">Billed monthly</div>
+                <div class="savings" id="standard-savings" style="display: none;"></div>
+            </div>
+            <div class="plan-features">
+                <ul>
+                    <li><i class="fas fa-star"></i> <span data-i18n="pricing.features.liveJobScraping">Live job scraping</span></li>
+                    <li><i class="fas fa-check"></i> <span>50 </span><span data-i18n="pricing.features.careerPages">career pages</span></li>
+                    <li><i class="fas fa-check"></i> <span>5 </span><span data-i18n="pricing.features.jobTitles">job titles</span></li>
+                    <li><i class="fas fa-check"></i> <span>2 </span><span data-i18n="pricing.features.cvBuilderPlural">CVs</span></li>
+                    <li><i class="fas fa-check"></i> <span data-i18n="pricing.features.dataExport">Data export</span></li>
+                    <li><i class="fas fa-check"></i> <span data-i18n="pricing.features.emailSupport">Email support</span></li>
+                </ul>
+            </div>
+            <button class="plan-btn" data-plan="standard">
+                <span data-i18n="pricing.upgradeTo">Upgrade to</span> <span data-i18n="pricing.plans.standard">Standard</span>
+            </button>
+        </div>
+
+        <div class="pricing-card pro-plan">
+            <div class="plan-header">
+                <h3 data-i18n="pricing.plans.pro">Pro</h3>
+                <div class="price">
+                    <span class="amount" id="pro-price">€9.99</span>
+                    <span class="period" data-i18n="pricing.perMonth">/month</span>
+                </div>
+                <div class="total-price" id="pro-total" data-i18n="pricing.billedMonthly">Billed monthly</div>
+                <div class="savings" id="pro-savings" style="display: none;"></div>
+            </div>
+            <div class="plan-features">
+                <ul>
+                    <li><i class="fas fa-crown"></i> <span data-i18n="pricing.features.priorityScraping">Priority scraping</span></li>
+                    <li><i class="fas fa-check"></i> <span>100 </span><span data-i18n="pricing.features.careerPages">career pages</span></li>
+                    <li><i class="fas fa-check"></i> <span>10 </span><span data-i18n="pricing.features.jobTitles">job titles</span></li>
+                    <li><i class="fas fa-check"></i> <span data-i18n="pricing.features.unlimitedTracking">Unlimited tracking</span></li>
+                    <li><i class="fas fa-check"></i> <span data-i18n="pricing.features.advancedAnalytics">Advanced analytics</span></li>
+                    <li><i class="fas fa-check"></i> <span data-i18n="pricing.features.prioritySupport">Priority support</span></li>
+                </ul>
+            </div>
+            <button class="plan-btn" data-plan="pro">
+                <span data-i18n="pricing.upgradeTo">Upgrade to</span> <span data-i18n="pricing.plans.pro">Pro</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="feature-comparison">
+        <h3 data-i18n="pricing.featureComparison">Feature Comparison</h3>
+        <div class="comparison-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th data-i18n="pricing.comparisonTable.feature">Feature</th>
+                        <th data-i18n="pricing.comparisonTable.free">Free</th>
+                        <th data-i18n="pricing.comparisonTable.standard">Standard</th>
+                        <th data-i18n="pricing.comparisonTable.pro">Pro</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td data-i18n="pricing.comparisonTable.jobSearchType">Job Search Type</td>
+                        <td data-i18n="pricing.comparisonTable.cacheOnly">Cache Only</td>
+                        <td data-i18n="pricing.comparisonTable.livePlusCache">Live + Cache</td>
+                        <td data-i18n="pricing.comparisonTable.priorityLivePlusCache">Priority Live + Cache</td>
+                    </tr>
+                    <tr>
+                        <td data-i18n="pricing.comparisonTable.careerPages">Career Pages</td>
+                        <td>10</td>
+                        <td>50</td>
+                        <td>100</td>
+                    </tr>
+                    <tr>
+                        <td data-i18n="pricing.comparisonTable.jobTitles">Job Titles</td>
+                        <td>2</td>
+                        <td>5</td>
+                        <td>10</td>
+                    </tr>
+                    <tr>
+                        <td data-i18n="pricing.comparisonTable.cvBuilder">CV Builder</td>
+                        <td>1 <span data-i18n="pricing.features.cvBuilder">CV</span></td>
+                        <td>2 <span data-i18n="pricing.features.cvBuilderPlural">CVs</span></td>
+                        <td>2 <span data-i18n="pricing.features.cvBuilderPlural">CVs</span></td>
+                    </tr>
+                    <tr>
+                        <td data-i18n="pricing.comparisonTable.support">Support</td>
+                        <td data-i18n="pricing.comparisonTable.community">Community</td>
+                        <td data-i18n="pricing.comparisonTable.email">Email</td>
+                        <td data-i18n="pricing.comparisonTable.priority">Priority</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<style>
+.pricing-page {
+    padding: 2rem;
+}
+
+.billing-toggle {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin: 2rem 0;
+}
+
+.billing-btn {
+    padding: 0.75rem 1.5rem;
+    border: 2px solid var(--border);
+    background: var(--card-bg);
+    color: var(--text-primary);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.billing-btn.active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+
+.plans-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.plan-card {
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 2rem;
+    text-align: center;
+    position: relative;
+    transition: transform 0.3s ease;
+}
+
+.plan-card:hover {
+    transform: translateY(-5px);
+}
+
+.plan-card.featured {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+    transform: scale(1.05);
+}
+
+.popular-badge {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--danger);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.plan-price {
+    margin: 2rem 0;
+}
+
+.price {
+    font-size: 3rem;
+    font-weight: 700;
+}
+
+.period {
+    font-size: 1rem;
+    opacity: 0.7;
+}
+
+.old-price {
+    text-decoration: line-through;
+    opacity: 0.5;
+    font-size: 1.2rem;
+}
+
+.savings {
+    background: var(--success);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    display: inline-block;
+    margin: 0.5rem 0;
+}
+
+.plan-features {
+    list-style: none;
+    margin: 2rem 0;
+    text-align: left;
+}
+
+.plan-features li {
+    padding: 0.75rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.plan-features .fa-check {
+    color: var(--success);
+}
+
+.featured .fa-check {
+    color: rgba(255,255,255,0.9);
+}
+</style>

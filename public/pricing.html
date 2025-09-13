@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pricing - myJobBuddy</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f8f9fa;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+        
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-decoration: none;
+            color: white;
+        }
+        
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        
+        .btn-outline {
+            background: transparent;
+            color: white;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+        
+        .btn-outline:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: white;
+        }
+        
+        .btn-primary {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 2px solid transparent;
+        }
+        
+        .btn-primary:hover {
+            background: white;
+            color: #667eea;
+        }
+        
+        .pricing-container {
+            max-width: 1200px;
+            margin: 120px auto 80px;
+            padding: 0 2rem;
+        }
+        
+        .pricing-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .pricing-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .pricing-header p {
+            font-size: 1.1rem;
+            color: #666;
+        }
+        
+        .billing-toggle {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+        
+        .billing-option {
+            padding: 0.75rem 1.5rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+        }
+        
+        .billing-option.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-color: transparent;
+        }
+        
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .pricing-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .pricing-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+        
+        .pricing-card.featured {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            transform: scale(1.05);
+        }
+        
+        .badge {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #ff6b6b;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .plan-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        .price-container {
+            margin: 2rem 0;
+        }
+        
+        .price {
+            font-size: 3rem;
+            font-weight: 700;
+        }
+        
+        .price-period {
+            font-size: 1rem;
+            opacity: 0.7;
+        }
+        
+        .old-price {
+            text-decoration: line-through;
+            opacity: 0.5;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .features-list {
+            list-style: none;
+            margin: 2rem 0;
+            text-align: left;
+        }
+        
+        .features-list li {
+            padding: 0.75rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .features-list .fa-check {
+            color: #28a745;
+        }
+        
+        .featured .fa-check {
+            color: rgba(255,255,255,0.9);
+        }
+        
+        .btn-select {
+            width: 100%;
+            padding: 1rem;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .btn-select-outline {
+            background: transparent;
+            color: #667eea;
+            border-color: #667eea;
+        }
+        
+        .btn-select-outline:hover {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-select-primary {
+            background: white;
+            color: #667eea;
+        }
+        
+        .btn-select-primary:hover {
+            transform: scale(1.05);
+        }
+        
+        .savings-badge {
+            background: #28a745;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav">
+            <a href="/" class="logo">
+                <i class="fas fa-briefcase"></i>
+                <span>myJobBuddy</span>
+            </a>
+            <div class="nav-buttons" id="navButtons">
+                <a href="/login" class="btn btn-outline">Sign In</a>
+                <a href="/register" class="btn btn-primary">Get Started</a>
+            </div>
+        </nav>
+    </header>
+    
+    <div class="pricing-container">
+        <div class="pricing-header">
+            <h1>Choose Your Plan</h1>
+            <p>Upgrade your job search with premium features</p>
+        </div>
+        
+        <div class="billing-toggle">
+            <div class="billing-option active" data-period="1">1 Month</div>
+            <div class="billing-option" data-period="3">3 Months</div>
+            <div class="billing-option" data-period="6">6 Months</div>
+        </div>
+        
+        <div class="pricing-grid">
+            <div class="pricing-card" id="free-plan">
+                <h3 class="plan-name">Free</h3>
+                <div class="price-container">
+                    <div class="price">$0<span class="price-period">/month</span></div>
+                </div>
+                <ul class="features-list">
+                    <li><i class="fas fa-check"></i> 10 favorite companies</li>
+                    <li><i class="fas fa-check"></i> 5 job title searches</li>
+                    <li><i class="fas fa-check"></i> 1 search every 2 days</li>
+                    <li><i class="fas fa-check"></i> Basic tracking</li>
+                    <li><i class="fas fa-check"></i> 3 CV templates</li>
+                    <li><i class="fas fa-check"></i> Simple linktree</li>
+                </ul>
+                <button class="btn btn-select btn-select-outline">Current Plan</button>
+            </div>
+            
+            <div class="pricing-card featured" id="standard-plan">
+                <div class="badge">Most Popular</div>
+                <h3 class="plan-name">Standard</h3>
+                <div class="price-container">
+                    <div class="old-price" style="display: none;"></div>
+                    <div class="savings-badge" style="display: none;"></div>
+                    <div class="price">$4.99<span class="price-period">/month</span></div>
+                </div>
+                <ul class="features-list">
+                    <li><i class="fas fa-check"></i> 25 favorite companies</li>
+                    <li><i class="fas fa-check"></i> 10 job title searches</li>
+                    <li><i class="fas fa-check"></i> 1 search per day</li>
+                    <li><i class="fas fa-check"></i> Advanced tracking</li>
+                    <li><i class="fas fa-check"></i> 3 AI cover letters/month</li>
+                    <li><i class="fas fa-check"></i> Enhanced linktree</li>
+                    <li><i class="fas fa-check"></i> Email reminders</li>
+                </ul>
+                <button class="btn btn-select btn-select-primary">Select Plan</button>
+            </div>
+            
+            <div class="pricing-card" id="premium-plan">
+                <h3 class="plan-name">Premium</h3>
+                <div class="price-container">
+                    <div class="old-price" style="display: none;"></div>
+                    <div class="savings-badge" style="display: none;"></div>
+                    <div class="price">$9.99<span class="price-period">/month</span></div>
+                </div>
+                <ul class="features-list">
+                    <li><i class="fas fa-check"></i> 50 favorite companies</li>
+                    <li><i class="fas fa-check"></i> 15 job title searches</li>
+                    <li><i class="fas fa-check"></i> 2 searches per day</li>
+                    <li><i class="fas fa-check"></i> LinkedIn integration</li>
+                    <li><i class="fas fa-check"></i> 10 AI cover letters/month</li>
+                    <li><i class="fas fa-check"></i> Premium templates</li>
+                    <li><i class="fas fa-check"></i> Priority support</li>
+                    <li><i class="fas fa-check"></i> Export features</li>
+                </ul>
+                <button class="btn btn-select btn-select-outline">Select Plan</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const pricingData = {
+            standard: {
+                1: { price: 4.99, total: 4.99 },
+                3: { price: 4.49, total: 13.47, savings: 1.50 },
+                6: { price: 3.99, total: 23.94, savings: 6.00 }
+            },
+            premium: {
+                1: { price: 9.99, total: 9.99 },
+                3: { price: 8.49, total: 25.47, savings: 4.50 },
+                6: { price: 6.99, total: 41.94, savings: 18.00 }
+            }
+        };
+        
+        const billingOptions = document.querySelectorAll('.billing-option');
+        let currentPeriod = 1;
+        
+        billingOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                billingOptions.forEach(opt => opt.classList.remove('active'));
+                option.classList.add('active');
+                currentPeriod = parseInt(option.dataset.period);
+                updatePrices();
+            });
+        });
+        
+        function updatePrices() {
+            const standardCard = document.getElementById('standard-plan');
+            const premiumCard = document.getElementById('premium-plan');
+            
+            updateCardPrice(standardCard, 'standard', currentPeriod);
+            updateCardPrice(premiumCard, 'premium', currentPeriod);
+        }
+        
+        function updateCardPrice(card, plan, period) {
+            const data = pricingData[plan][period];
+            const priceEl = card.querySelector('.price');
+            const oldPriceEl = card.querySelector('.old-price');
+            const savingsEl = card.querySelector('.savings-badge');
+            
+            if (period === 1) {
+                priceEl.innerHTML = `$${data.price}<span class="price-period">/month</span>`;
+                oldPriceEl.style.display = 'none';
+                savingsEl.style.display = 'none';
+            } else {
+                priceEl.innerHTML = `$${data.price}<span class="price-period">/month</span>`;
+                oldPriceEl.innerHTML = `$${data.total + data.savings} total`;
+                oldPriceEl.style.display = 'block';
+                savingsEl.innerHTML = `Save $${data.savings}`;
+                savingsEl.style.display = 'inline-block';
+            }
+        }
+        
+        fetch('/auth/status')
+            .then(res => res.json())
+            .then(data => {
+                if (data.isAuthenticated) {
+                    document.getElementById('navButtons').innerHTML = `
+                        <a href="/app" class="btn btn-outline">Dashboard</a>
+                        <a href="#" class="btn btn-primary" onclick="logout()">Logout</a>
+                    `;
+                    
+                    const freeBtn = document.querySelector('#free-plan .btn-select');
+                    if (data.user && data.user.subscription && data.user.subscription.plan === 'free') {
+                        freeBtn.textContent = 'Current Plan';
+                        freeBtn.disabled = true;
+                    }
+                }
+            });
+        
+        function logout() {
+            fetch('/auth/logout', { method: 'POST' })
+                .then(() => window.location.href = '/');
+        }
+        
+        document.querySelectorAll('.btn-select').forEach(btn => {
+            btn.addEventListener('click', () => {
+                if (!btn.disabled) {
+                    window.location.href = '/register';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

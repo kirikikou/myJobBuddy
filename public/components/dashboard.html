@@ -1,0 +1,335 @@
+<div class="dashboard-header">
+  <h1>
+      <span style="background: linear-gradient(to bottom, hsl(247, 88%, 70%), hsl(282, 82%, 51%)); box-shadow: 0 2px 12px hsla(247, 88%, 70%, .3); width: 48px; height: 48px; display: inline-flex; align-items: center; justify-content: center; border-radius: 12px; margin-right: 16px;">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="#fff" width="24" height="24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+          </svg>
+      </span>
+      <span id="user-name" data-i18n="dashboard.title">Your Career Journey</span>
+  </h1>
+  <div class="header-actions">
+      <button class="btn btn-primary" id="quick-search-btn">
+          <i class="fas fa-search"></i>
+          <span data-i18n="dashboard.quickSearch">Quick Search</span>
+      </button>
+  </div>
+</div>
+
+<div class="stat-cards">
+  <div class="stat-card">
+      <div class="stat-value" id="total-applications">0</div>
+      <div class="stat-label" data-i18n="dashboard.totalApplications">Total Applications</div>
+  </div>
+  <div class="stat-card">
+      <div class="stat-value" id="scraped-offers">0</div>
+      <div class="stat-label" data-i18n="dashboard.scrapedOffers">Scraped Offers</div>
+  </div>
+</div>
+
+<div class="dashboard-grid">
+  <div class="main-column">
+      
+      <div class="card" style="margin-bottom: 32px;">
+          <div class="card-header">
+              <h3 class="card-title">
+                  <i class="fas fa-bell" style="color: var(--warning);"></i>
+                  <span data-i18n="dashboard.followupReminders">Follow-up Reminders</span>
+              </h3>
+              <a href="#applications" class="show-all" data-i18n="dashboard.showAll">show all</a>
+          </div>
+          <div class="card-body">
+              <div id="dashboard-reminders" class="recent-list">
+                  <div class="empty-state">
+                      <i class="fas fa-bell" style="font-size: 3rem; opacity: 0.2; margin-bottom: 16px;"></i>
+                      <p data-i18n="dashboard.noReminders">No reminders yet</p>
+                      <p style="font-size: 0.875rem; opacity: 0.6;" data-i18n="dashboard.addApplicationsHint">Add applications to generate reminders</p>
+                  </div>
+              </div>
+          </div>
+      </div>
+      
+      <div class="card" id="dashboard-resources-card" style="display: none;">
+        <div class="card-header">
+            <h3 class="card-title">
+                <i class="fas fa-star" style="color: var(--success);"></i>
+                <span data-i18n="dashboard.quickResources">Quick Resources</span>
+            </h3>
+            <a href="#resources" class="show-all" data-i18n="dashboard.manageAll">manage all</a>
+        </div>
+        <div class="card-body">
+            <div class="dashboard-resources" id="dashboard-resources">
+            </div>
+        </div>
+      </div>
+      
+      <div class="card">
+          <div class="card-header">
+              <h3 class="card-title">
+                  <i class="fas fa-lightbulb" style="color: var(--accent);"></i>
+                  <span data-i18n="dashboard.unexpectedOpportunities">Unexpected Opportunities</span>
+              </h3>
+              <a href="#job-search" class="show-all" data-i18n="dashboard.searchMore">search more</a>
+          </div>
+          <div class="card-body">
+              <div class="job-cards" id="unexpected-opportunities">
+                  <div class="empty-state">
+                      <i class="fas fa-lightbulb" style="font-size: 3rem; opacity: 0.2; margin-bottom: 16px;"></i>
+                      <p data-i18n="dashboard.noOpportunities">No opportunities found</p>
+                      <p style="font-size: 0.875rem; opacity: 0.6;" data-i18n="dashboard.runSearchHint">Run a job search to discover opportunities</p>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+
+  <div class="side-column">
+      <div class="card personal-reminder-card">
+          <div class="card-header">
+              <h3 class="card-title">
+                  <i class="fas fa-sticky-note" style="color: var(--success);"></i>
+                  <span data-i18n="dashboard.personalReminder">Personal Reminder</span>
+              </h3>
+          </div>
+          <div class="card-body personal-reminder-body">
+              <div class="personal-reminder">
+                  <textarea 
+                      id="personal-reminder-text" 
+                      class="personal-reminder-input" 
+                      data-i18n-placeholder="dashboard.personalReminderPlaceholder"
+                      placeholder="Write your personal reminder here..."
+                  ></textarea>
+                  <button class="btn btn-primary btn-sm" id="save-personal-reminder" style="margin-top: 12px; width: 100%;">
+                      <i class="fas fa-save"></i> 
+                      <span data-i18n="dashboard.saveReminder">Save Reminder</span>
+                  </button>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
+
+<style>
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+}
+
+.dashboard-header h1 {
+  display: flex;
+  align-items: center;
+  font-size: 1.75rem;
+  font-weight: 600;
+}
+
+.show-all {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  text-decoration: none;
+  transition: color var(--transition);
+}
+
+.show-all:hover {
+  color: var(--primary);
+}
+
+.stat-cards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  margin-bottom: 40px;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  gap: 32px;
+}
+
+.personal-reminder-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.personal-reminder-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.personal-reminder {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.recent-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.recent-item {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  background: var(--gradient-card);
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  transition: all var(--transition);
+  cursor: pointer;
+}
+
+.recent-item:hover {
+  background: var(--surface-hover);
+  transform: translateX(8px);
+}
+
+.recent-item-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, rgba(79, 109, 245, 0.1), rgba(141, 103, 247, 0.1));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 16px;
+  color: var(--primary);
+}
+
+.recent-item-content {
+  flex: 1;
+}
+
+.recent-item-title {
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.recent-item-subtitle {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.personal-reminder-input {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 12px;
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 0.875rem;
+  resize: none;
+  min-height: 200px;
+}
+
+.personal-reminder-input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(79, 109, 245, 0.2);
+}
+
+.personal-reminder-input::placeholder {
+  color: var(--text-muted);
+}
+
+.dashboard-resources {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 12px;
+}
+
+.dashboard-resource-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 12px;
+  background: var(--gradient-card);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all var(--transition);
+  text-align: center;
+}
+
+.dashboard-resource-item:hover {
+  background: var(--surface-hover);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-hover);
+}
+
+.dashboard-resource-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, rgba(79, 109, 245, 0.2), rgba(141, 103, 247, 0.2));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  color: var(--primary);
+}
+
+.dashboard-resource-title {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 48px 24px;
+  color: var(--text-secondary);
+}
+
+.language-selector {
+  background: var(--surface);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 8px 12px;
+  color: var(--text-primary);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.language-selector:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(79, 109, 245, 0.2);
+}
+
+@media (max-width: 1200px) {
+  .dashboard-grid {
+      grid-template-columns: 1fr;
+  }
+  
+  .personal-reminder-input {
+      min-height: 120px;
+  }
+}
+
+@media (max-width: 768px) {
+  .stat-cards {
+      grid-template-columns: 1fr;
+  }
+  
+  .dashboard-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 16px;
+  }
+  
+  .dashboard-resources {
+      grid-template-columns: repeat(2, 1fr);
+  }
+}
+</style>

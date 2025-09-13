@@ -1,0 +1,499 @@
+<div class="job-listing-container">
+    <header class="page-header">
+        <h1 data-translate="jobListing.title">Job Listing</h1>
+        <p class="subtitle" data-translate="jobListing.subtitle">Browse all available job opportunities from shared cache</p>
+    </header>
+
+    <div class="stats-overview">
+        <div class="stat-card">
+            <i class="fas fa-briefcase"></i>
+            <div class="stat-content">
+                <h3 id="total-jobs-count">0</h3>
+                <p data-translate="jobListing.totalJobs">Total Jobs</p>
+            </div>
+        </div>
+        <div class="stat-card">
+            <i class="fas fa-building"></i>
+            <div class="stat-content">
+                <h3 id="total-companies-count">0</h3>
+                <p data-translate="jobListing.totalCompanies">Companies</p>
+            </div>
+        </div>
+        <div class="stat-card">
+            <i class="fas fa-star"></i>
+            <div class="stat-content">
+                <h3 id="total-favorites-count">0</h3>
+                <p data-translate="jobListing.favorites">Favorites</p>
+            </div>
+        </div>
+        <div class="stat-card">
+            <i class="fas fa-clock"></i>
+            <div class="stat-content">
+                <h3 id="last-refresh-time">--:--</h3>
+                <p data-translate="jobListing.lastRefresh">Last Refresh</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="plan-notice" id="plan-notice" style="display: none;">
+        <i class="fas fa-info-circle"></i>
+        <span id="plan-notice-text"></span>
+    </div>
+
+    <div class="filters-section">
+        <div class="search-filters">
+            <div class="filter-group">
+                <label data-translate="jobListing.searchCompany">Company</label>
+                <input type="text" id="filter-company" placeholder="Search by company..." />
+            </div>
+            <div class="filter-group">
+                <label data-translate="jobListing.searchJob">Job Title</label>
+                <input type="text" id="filter-job" placeholder="Search by job title..." />
+            </div>
+            <div class="filter-group">
+                <label data-translate="jobListing.filterDate">Date Range</label>
+                <select id="filter-date">
+                    <option value="all">All Time</option>
+                    <option value="today">Today</option>
+                    <option value="week">Last 7 days</option>
+                    <option value="month">Last 30 days</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label data-translate="jobListing.showFavorites">Favorites Only</label>
+                <input type="checkbox" id="filter-favorites" />
+            </div>
+            <button id="apply-filters" class="btn btn-primary">
+                <i class="fas fa-filter"></i> Apply Filters
+            </button>
+            <button id="clear-filters" class="btn btn-secondary">
+                <i class="fas fa-times"></i> Clear
+            </button>
+            <button id="refresh-jobs" class="btn btn-info" style="margin-left: auto;">
+                <i class="fas fa-sync-alt"></i> Refresh
+            </button>
+        </div>
+    </div>
+
+    <div class="alphabet-navigation">
+        <button class="alpha-btn" data-letter="0-9">0-9</button>
+        <button class="alpha-btn" data-letter="A">A</button>
+        <button class="alpha-btn" data-letter="B">B</button>
+        <button class="alpha-btn" data-letter="C">C</button>
+        <button class="alpha-btn" data-letter="D">D</button>
+        <button class="alpha-btn" data-letter="E">E</button>
+        <button class="alpha-btn" data-letter="F">F</button>
+        <button class="alpha-btn" data-letter="G">G</button>
+        <button class="alpha-btn" data-letter="H">H</button>
+        <button class="alpha-btn" data-letter="I">I</button>
+        <button class="alpha-btn" data-letter="J">J</button>
+        <button class="alpha-btn" data-letter="K">K</button>
+        <button class="alpha-btn" data-letter="L">L</button>
+        <button class="alpha-btn" data-letter="M">M</button>
+        <button class="alpha-btn" data-letter="N">N</button>
+        <button class="alpha-btn" data-letter="O">O</button>
+        <button class="alpha-btn" data-letter="P">P</button>
+        <button class="alpha-btn" data-letter="Q">Q</button>
+        <button class="alpha-btn" data-letter="R">R</button>
+        <button class="alpha-btn" data-letter="S">S</button>
+        <button class="alpha-btn" data-letter="T">T</button>
+        <button class="alpha-btn" data-letter="U">U</button>
+        <button class="alpha-btn" data-letter="V">V</button>
+        <button class="alpha-btn" data-letter="W">W</button>
+        <button class="alpha-btn" data-letter="X">X</button>
+        <button class="alpha-btn" data-letter="Y">Y</button>
+        <button class="alpha-btn" data-letter="Z">Z</button>
+        <button class="alpha-btn active" data-letter="ALL">ALL</button>
+    </div>
+
+    <div class="pagination-controls">
+        <label>Items per page:</label>
+        <select id="items-per-page">
+            <option value="50">50</option>
+            <option value="100">100</option>
+            <option value="500">500</option>
+            <option value="1000">1000</option>
+        </select>
+    </div>
+
+    <div class="jobs-table-container">
+        <table id="jobs-table" class="jobs-table">
+            <thead>
+                <tr>
+                    <th data-sort="favorite"><i class="fas fa-star"></i></th>
+                    <th data-sort="title" data-translate="jobListing.columnTitle">Job Title</th>
+                    <th data-sort="company" data-translate="jobListing.columnCompany">Company</th>
+                    <th data-sort="date" data-translate="jobListing.columnDate">Date</th>
+                    <th data-translate="jobListing.columnActions">Actions</th>
+                </tr>
+            </thead>
+            <tbody id="jobs-tbody">
+            </tbody>
+        </table>
+        
+        <div id="no-jobs-message" class="empty-state" style="display: none;">
+            <i class="fas fa-inbox"></i>
+            <h3 data-translate="jobListing.noJobs">No jobs found</h3>
+            <p data-translate="jobListing.noJobsDesc">Try adjusting your filters or wait for the next refresh</p>
+        </div>
+    </div>
+
+    <div class="pagination-footer">
+        <button id="prev-page" class="btn btn-secondary" disabled>
+            <i class="fas fa-chevron-left"></i> Previous
+        </button>
+        <span id="page-info">Page 1 of 1</span>
+        <button id="next-page" class="btn btn-secondary" disabled>
+            Next <i class="fas fa-chevron-right"></i>
+        </button>
+    </div>
+
+    <div class="refresh-notice" id="refresh-notice" style="display: none;">
+        <i class="fas fa-sync-alt fa-spin"></i>
+        <span data-translate="jobListing.refreshing">Refreshing job listings...</span>
+    </div>
+</div>
+
+<style>
+.job-listing-container {
+    padding: 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.page-header {
+    margin-bottom: 30px;
+}
+
+.page-header h1 {
+    font-size: 2rem;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+}
+
+.subtitle {
+    color: var(--text-secondary);
+}
+
+.stats-overview {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.stat-card {
+    background: var(--surface);
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    transition: transform 0.3s;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+}
+
+.stat-card i {
+    font-size: 2rem;
+    color: var(--primary);
+}
+
+.stat-content h3 {
+    font-size: 1.5rem;
+    margin: 0;
+    color: var(--text-primary);
+}
+
+.stat-content p {
+    margin: 5px 0 0;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.filters-section {
+    background: var(--surface);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.search-filters {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    align-items: flex-end;
+}
+
+.filter-group {
+    flex: 1;
+    min-width: 200px;
+}
+
+.filter-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.filter-group input,
+.filter-group select {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background: var(--background);
+    color: var(--text-primary);
+}
+
+.alphabet-navigation {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    padding: 15px;
+    background: var(--surface);
+    border-radius: 12px;
+    margin-bottom: 20px;
+    justify-content: center;
+}
+
+.alpha-btn {
+    padding: 8px 12px;
+    border: 1px solid var(--border-color);
+    background: var(--background);
+    color: var(--text-primary);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-weight: 500;
+}
+
+.alpha-btn:hover {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+
+.alpha-btn.active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+
+.pagination-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    padding: 10px;
+    background: var(--surface);
+    border-radius: 8px;
+}
+
+.jobs-table-container {
+    background: var(--surface);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.jobs-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.jobs-table thead {
+    background: var(--background);
+}
+
+.jobs-table th {
+    padding: 15px;
+    text-align: left;
+    font-weight: 600;
+    color: var(--text-primary);
+    cursor: pointer;
+    user-select: none;
+}
+
+.jobs-table th[data-sort]:hover {
+    background: var(--surface-hover);
+}
+
+.jobs-table tbody tr {
+    border-top: 1px solid var(--border-color);
+    transition: background 0.2s;
+}
+
+.jobs-table tbody tr:hover {
+    background: var(--surface-hover);
+}
+
+.jobs-table td {
+    padding: 15px;
+    color: var(--text-primary);
+}
+
+.job-title-link {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.job-title-link:hover {
+    text-decoration: underline;
+}
+
+.company-link {
+    color: var(--text-primary);
+    text-decoration: none;
+}
+
+.company-link:hover {
+    color: var(--primary);
+}
+
+.favorite-btn {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: color 0.3s;
+}
+
+.favorite-btn.active {
+    color: #ffd700;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.action-btn {
+    padding: 6px 12px;
+    border: 1px solid var(--border-color);
+    background: var(--background);
+    color: var(--text-primary);
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: all 0.3s;
+}
+
+.action-btn:hover {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-secondary);
+}
+
+.empty-state i {
+    font-size: 4rem;
+    margin-bottom: 20px;
+    opacity: 0.5;
+}
+
+.pagination-footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+    background: var(--surface);
+    border-radius: 12px;
+}
+
+#page-info {
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+.refresh-notice {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: var(--primary);
+    color: white;
+    padding: 15px 20px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+}
+
+.cache-age-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    margin-left: 5px;
+}
+
+.cache-age-fresh {
+    background: #10b981;
+    color: white;
+}
+
+.cache-age-recent {
+    background: #3b82f6;
+    color: white;
+}
+
+.cache-age-old {
+    background: #f59e0b;
+    color: white;
+}
+
+.cache-age-stale {
+    background: #ef4444;
+    color: white;
+}
+
+.plan-notice {
+    background: #fef3c7;
+    color: #92400e;
+    padding: 12px 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid #fde68a;
+}
+
+.plan-notice i {
+    font-size: 1.2rem;
+}
+
+.btn-info {
+    background: #3b82f6;
+    color: white;
+    border: none;
+}
+
+.btn-info:hover {
+    background: #2563eb;
+}
+
+.btn-secondary {
+    background: var(--surface);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+
+.btn-secondary:hover {
+    background: var(--surface-hover);
+}
+</style>

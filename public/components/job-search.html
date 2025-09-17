@@ -1,0 +1,212 @@
+<!-- job-search.html -->
+<div class="page-header">
+  <h2 class="page-title" data-i18n="jobSearch.title">Job Search</h2>
+</div>
+
+<!-- Search Form Card -->
+<div class="card search-card">
+  <div class="card-header">
+    <div class="card-title">
+      <i class="fas fa-search"></i>
+      <span data-i18n="jobSearch.searchJobs">Search Jobs</span>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="form-group">
+      <div class="career-header">
+        <div class="form-label" data-i18n="jobSearch.jobTitles">Job Titles</div>
+        <div class="career-controls">
+          <button class="btn-career-control" id="clearJobTitles" data-i18n-title="jobSearch.clearAllJobTitles">
+            <i class="fas fa-trash"></i>
+          </button>
+        </div>
+      </div>
+      <div class="tag-input" id="jobTitlesContainer">
+        <input class="form-control" type="text" id="jobTitleInput" data-i18n-placeholder="jobSearch.addJobTitle">
+      </div>
+      <div id="jobTitleError" class="form-error"></div>
+    </div>
+
+    <div class="form-group">
+      <div class="form-label" data-i18n="jobSearch.jobBoard">Job Board</div>
+      <div class="site-buttons">
+        <button class="site-button active" data-site="career-pages" data-i18n="jobSearch.careerPages">Career Pages</button>
+        <button class="site-button" data-site="linkedin" data-i18n="jobSearch.linkedin">LinkedIn</button>
+        <button class="site-button" data-site="indeed" data-i18n="jobSearch.indeed">Indeed</button>
+        <button class="site-button" data-site="glassdoor" data-i18n="jobSearch.glassdoor">Glassdoor</button>
+        <button class="site-button" data-site="monster" data-i18n="jobSearch.monster">Monster</button>
+        <button class="site-button" data-site="ziprecruiter" data-i18n="jobSearch.ziprecruiter">ZipRecruiter</button>
+        <button class="site-button" data-site="builtin" data-i18n="jobSearch.builtin">BuiltIn</button>
+      </div>
+    </div>
+
+    <div id="careerPagesContainer" class="form-group">
+      <div class="career-header">
+        <div class="form-label" data-i18n="jobSearch.careerPageUrls">Career Page URLs</div>
+        <div class="career-controls">
+          <div class="list-manager">
+            <select id="listSelector" class="list-selector">
+              <option value="listA" data-i18n="jobSearch.listA">List A</option>
+              <option value="listB" data-i18n="jobSearch.listB">List B</option>
+              <option value="listC" data-i18n="jobSearch.listC">List C</option>
+              <option value="listD" data-i18n="jobSearch.listD">List D</option>
+              <option value="listE" data-i18n="jobSearch.listE">List E</option>
+            </select>
+          </div>
+          <div class="url-actions">
+            <button class="btn-career-control" id="exportUrls" data-i18n-title="jobSearch.exportUrls">
+              <i class="fas fa-file-export"></i>
+            </button>
+            <button class="btn-career-control" id="clearAllUrls" data-i18n-title="jobSearch.clearAllUrls">
+              <i class="fas fa-trash"></i>
+            </button>
+            <button class="btn-career-control" id="manageFavorites" data-i18n-title="jobSearch.manageFavorites">
+              <i class="fas fa-star"></i>
+            </button>
+            <button class="btn-career-control" id="manageSelectionA" data-i18n-title="jobSearch.manageSelectionA" title="Show/Hide Selection A companies">
+              <i class="fas fa-tag"></i>
+              <span class="selection-label">A</span>
+            </button>
+            <button class="btn-career-control" id="manageSelectionB" data-i18n-title="jobSearch.manageSelectionB" title="Show/Hide Selection B companies">
+              <i class="fas fa-tag"></i>
+              <span class="selection-label">B</span>
+            </button>
+            <button class="btn-career-control" id="manageSelectionC" data-i18n-title="jobSearch.manageSelectionC" title="Show/Hide Selection C companies">
+              <i class="fas fa-tag"></i>
+              <span class="selection-label">C</span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="tag-input" id="careerUrlsContainer">
+        <input class="form-control" type="text" id="careerUrlInput" data-i18n-placeholder="jobSearch.addCareerUrl" style="min-width: 100px;">
+      </div>
+      <div id="careerUrlError" class="form-error"></div>
+    </div>
+    <div class="search-status-bar" style="display: none;" id="searchStatusBar">
+      <div class="status-info">
+          <div class="remaining-searches">
+              <i class="fas fa-search"></i>
+              <span id="remainingSearchesText" data-i18n="jobSearch.loading">Loading...</span>
+          </div>
+          <div class="time-estimate" id="timeEstimate" style="display: none;">
+              <i class="fas fa-clock"></i>
+              <span id="estimatedTime" data-i18n="jobSearch.calculating">Calculating...</span>
+          </div>
+      </div>
+      <div class="upgrade-link">
+          <a href="/pricing" class="btn btn-outline btn-sm">
+              <i class="fas fa-arrow-up"></i> <span data-i18n="jobSearch.upgradePlan">Upgrade Plan</span>
+          </a>
+      </div>
+    </div>
+
+    <div class="search-progress" id="searchProgress" style="display: none;">
+      <div class="progress-bar">
+          <div class="progress-fill" id="progressFill"></div>
+      </div>
+      <div class="progress-text">
+          <span id="progressText" data-i18n="jobSearch.preparingSearch">Preparing search...</span>
+          <span id="timeRemaining"></span>
+      </div>
+    </div>
+  </div>
+    <div class="form-actions" style="text-align: right; margin-top: var(--space-lg);">
+      <button class="btn btn-outline search-cache-button" id="search-cache-only-action" style="margin-right: 12px;">
+        <i class="fas fa-database"></i>
+        <span data-i18n="jobSearch.searchCacheOnly">Search Cache Only</span>
+      </button>
+      <button class="btn btn-primary search-button" id="search-jobs-action">
+        <i class="fas fa-search"></i>
+        <span data-i18n="jobSearch.searchJobs">Search Jobs</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Results Section Card -->
+<div class="card results-card">
+  <div class="card-header">
+    <div class="card-title">
+      <i class="fas fa-list"></i>
+      <span data-i18n="jobSearch.searchResults">Search Results</span>
+    </div>
+    <div class="card-actions" style="display: flex; align-items: center; gap: 12px;">
+      <button class="btn btn-outline btn-sm" id="exportJobResults" style="display: none;">
+        <i class="fas fa-download"></i> <span data-i18n="jobSearch.exportResults">Export Results</span>
+      </button>
+      <div id="resultsCount" style="font-size: 0.85rem; color: rgba(255,255,255,0.7);">
+        (<span>0</span> <span data-i18n="jobSearch.resultsCount">results</span>)
+      </div>
+    </div>
+  </div>
+  
+  <!-- Results Filters -->
+  <div class="results-filters" id="resultsFilters" style="display: none; padding: var(--space-md) var(--space-lg); border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
+    <div class="filter-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-sm);">
+      <div class="filter-title" style="font-size: 0.9rem; font-weight: 500; color: rgba(255, 255, 255, 0.8);">
+        <i class="fas fa-filter"></i> <span data-i18n="jobSearch.filterResults">Filter Results</span>
+      </div>
+      <button class="btn-career-control" id="clearAllFilters" data-i18n-title="jobSearch.clearAllFilters">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="filter-controls" style="display: flex; gap: var(--space-md); flex-wrap: wrap; align-items: center;">
+      <div class="filter-group">
+        <input type="text" id="domainFilter" class="form-control" data-i18n-placeholder="jobSearch.filterByDomain" style="width: 200px; padding: 6px 12px; font-size: 0.85rem;">
+      </div>
+      <div class="filter-group">
+        <input type="text" id="titleFilter" class="form-control" data-i18n-placeholder="jobSearch.filterByTitle" style="width: 200px; padding: 6px 12px; font-size: 0.85rem;">
+      </div>
+    </div>
+  </div>
+  
+  <div class="card-body">
+    <div class="loading" id="loadingIndicator">
+      <i class="fas fa-spinner"></i>
+      <p data-i18n="jobSearch.searchingJobs">Searching for job opportunities...</p>
+    </div>
+    <div id="resultsContainer">
+      <p class="empty-state">
+        <i class="fas fa-search"></i>
+        <span data-i18n="jobSearch.emptyStateMessage">Enter your search criteria and click "Search Jobs" to see results.</span>
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- HTTPS Validation Modal -->
+<div class="modal-backdrop" id="https-validation-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 class="modal-title">
+        <i class="fas fa-shield-alt" style="color: var(--warning); margin-right: 8px;"></i>
+        <span data-i18n="jobSearch.urlSecurityNotice">URL Security Notice</span>
+      </h3>
+      <button class="modal-close" id="close-https-modal">&times;</button>
+    </div>
+    <div class="modal-body" style="text-align: center; padding: var(--space-xl);">
+      <div style="margin-bottom: var(--space-lg);">
+        <i class="fas fa-exclamation-triangle" style="color: var(--warning); font-size: 3rem; margin-bottom: var(--space-md);"></i>
+      </div>
+      <h4 style="margin-bottom: var(--space-md); color: var(--text-primary);" data-i18n="jobSearch.httpsProtocolAdded">HTTPS Protocol Added</h4>
+      <p style="margin-bottom: var(--space-md); color: var(--text-secondary); line-height: 1.5;">
+        <span data-i18n="jobSearch.securityReason">For security reasons, we automatically added</span> <strong>https://</strong> <span data-i18n="jobSearch.toYourUrl">to your URL:</span>
+      </p>
+      <div style="background: rgba(255, 255, 255, 0.05); padding: var(--space-md); border-radius: var(--radius); margin-bottom: var(--space-lg); font-family: monospace; word-break: break-all;">
+        <div style="color: var(--text-muted); font-size: 0.85rem;" data-i18n="jobSearch.original">Original:</div>
+        <div id="originalUrl" style="color: var(--danger); margin-bottom: var(--space-sm);"></div>
+        <div style="color: var(--text-muted); font-size: 0.85rem;" data-i18n="jobSearch.corrected">Corrected:</div>
+        <div id="correctedUrl" style="color: var(--success);"></div>
+      </div>
+      <p style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.4;" data-i18n="jobSearch.urlCorrected">
+        The URL has been automatically corrected and added to your list.
+      </p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" id="confirm-https">
+        <i class="fas fa-check"></i> <span data-i18n="jobSearch.gotIt">Got it</span>
+      </button>
+    </div>
+  </div>
+</div>

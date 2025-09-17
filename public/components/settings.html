@@ -1,0 +1,103 @@
+<div class="page-header">
+  <h2 class="page-title" data-i18n="settings.title">Settings</h2>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <div class="card-title">
+      <i class="fas fa-globe"></i>
+      <span data-i18n="settings.languageSelection">Language Selection</span>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="form-group">
+      <div class="form-label" data-i18n="settings.chooseLanguage">Choose your preferred language</div>
+      <select class="form-control" id="language-selector">
+      </select>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <div class="card-title">
+      <i class="fas fa-bell"></i>
+      <span data-i18n="settings.notificationSettings">Notification Settings</span>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="form-group">
+      <div class="form-label" data-i18n="settings.reminderTiming">Reminder Timing</div>
+      <div style="display: flex; flex-wrap: wrap; gap: var(--space-md); margin-top: var(--space-xs);">
+        <div style="display: flex; align-items: center;">
+          <input
+            type="checkbox"
+            id="reminder-15-days"
+            checked
+            style="margin-right: var(--space-sm); width: 18px; height: 18px;"
+          >
+          <label for="reminder-15-days" data-i18n="settings.firstReminder15Days">First reminder after 15 days</label>
+        </div>
+        <div style="display: flex; align-items: center;">
+          <input
+            type="checkbox"
+            id="reminder-30-days"
+            checked
+            style="margin-right: var(--space-sm); width: 18px; height: 18px;"
+          >
+          <label for="reminder-30-days" data-i18n="settings.secondReminder30Days">Second reminder after 30 days</label>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn btn-primary" id="save-notification-settings-btn">
+      <i class="fas fa-save"></i> <span data-i18n="settings.saveChanges">Save Changes</span>
+    </button>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <div class="card-title">
+      <i class="fas fa-palette"></i>
+      <span data-i18n="settings.appearance">Appearance</span>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="form-group">
+      <div class="form-label" data-i18n="settings.theme">Theme</div>
+      <select class="form-control" id="theme-selector">
+        <option value="dark" data-i18n="settings.darkDefault">Dark (Default)</option>
+        <option value="light" data-i18n="settings.light">Light</option>
+        <option value="system" data-i18n="settings.systemPreference">System Preference</option>
+      </select>
+    </div>
+
+    <button class="btn btn-primary" id="save-appearance-settings-btn">
+      <i class="fas fa-save"></i> <span data-i18n="settings.saveChanges">Save Changes</span>
+    </button>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <div class="card-title">
+      <i class="fas fa-database"></i>
+      <span data-i18n="settings.dataManagement">Data Management</span>
+    </div>
+  </div>
+  <div class="card-body">
+    <p style="margin-bottom: var(--space-md); color: rgba(255, 255, 255, 0.8);" data-i18n="settings.dataManagementDescription">
+      Manage your saved data and preferences.
+    </p>
+
+    <div style="display: flex; flex-wrap: wrap; gap: var(--space-md);">
+      <button class="btn btn-primary" id="save-to-file-btn">
+        <i class="fas fa-download"></i> <span data-i18n="settings.saveToJsonFile">Save to JSON File</span>
+      </button>
+      <button class="btn btn-outline" id="reset-data-btn">
+        <i class="fas fa-redo"></i> <span data-i18n="settings.resetAllData">Reset All Data</span>
+      </button>
+    </div>
+  </div>
+</div>

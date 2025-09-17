@@ -1,0 +1,274 @@
+<!-- resources.html -->
+<!-- Resources Page (Combined Links and Cover Letters) -->
+<div class="page-header">
+  <h2 class="page-title" data-i18n="resources.title">Resources</h2>
+  <div class="header-actions">
+    <!-- Linktree Links -->
+    <div class="linktree-links" id="linktree-links">
+      <!-- Linktree links will be populated here -->
+    </div>
+    
+    <button class="btn btn-primary" id="toggle-edit-mode-btn">
+      <i class="fas fa-grip-horizontal"></i>
+      <span data-i18n="resources.editLayout">Edit Layout</span>
+    </button>
+  </div>
+</div>
+
+<!-- Cover Letters Section -->
+<div class="section" id="cover-letters-section">
+  <div class="card cover-letters-card">
+    <div class="card-header">
+      <div class="card-title">
+        <i class="fas fa-file-alt"></i>
+        <span data-i18n="resources.coverLetters">Cover Letters</span>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="resources-grid" id="cover-letters-grid">
+        <!-- Cover letters will be dynamically added here -->
+        <div class="resource-item add-resource" id="add-cover-letter">
+          <div class="resource-icon">
+            <i class="fas fa-plus"></i>
+          </div>
+          <div class="resource-title" data-i18n="resources.addCoverLetter">Add Cover Letter</div>
+          <div class="resource-subtitle" data-i18n="resources.createNewTemplate">Create a new template</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Professional Links Section -->
+<div class="section" id="links-section">
+  <div class="card links-card">
+    <div class="card-header">
+      <div class="card-title">
+        <i class="fas fa-link"></i>
+        <span data-i18n="resources.professionalLinks">Professional Links</span>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="resources-grid" id="links-grid">
+        <!-- Links will be dynamically added here -->
+        <div class="resource-item add-resource" id="add-link">
+          <div class="resource-icon">
+            <i class="fas fa-plus"></i>
+          </div>
+          <div class="resource-title" data-i18n="resources.addLink">Add Link</div>
+          <div class="resource-subtitle" data-i18n="resources.saveProfessionalLink">Save a professional link</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add Cover Letter Modal -->
+<div class="modal-backdrop" id="add-cover-letter-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 class="modal-title" data-i18n="resources.addCoverLetter">Add Cover Letter</h3>
+      <button class="modal-close">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <div class="form-label" data-i18n="resources.title">Title</div>
+        <input type="text" class="form-control" id="cover-letter-title" data-i18n-placeholder="resources.coverLetterTitlePlaceholder" placeholder="e.g., VFX Supervisor Application">
+      </div>
+
+      <div class="form-group">
+        <div class="form-label" data-i18n="resources.content">Content</div>
+        <textarea class="form-control" id="cover-letter-content" style="height: 300px; font-family: inherit;" data-i18n-placeholder="resources.coverLetterContentPlaceholder" placeholder="Write your cover letter template here..."></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-danger" id="delete-cover-letter" style="margin-right: auto; display: none;">
+        <i class="fas fa-trash"></i>
+        <span data-i18n="common.delete">Delete</span>
+      </button>
+      <button class="btn btn-outline" id="cancel-cover-letter" data-i18n="common.cancel">Cancel</button>
+      <button class="btn btn-primary" id="save-cover-letter" data-i18n="common.save">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Link Modal -->
+<div class="modal-backdrop" id="add-link-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 class="modal-title" data-i18n="resources.addProfessionalLink">Add Professional Link</h3>
+      <button class="modal-close">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <div class="form-label" data-i18n="resources.title">Title</div>
+        <input type="text" class="form-control" id="link-title" data-i18n-placeholder="resources.linkTitlePlaceholder" placeholder="e.g., Portfolio, LinkedIn, Showreel">
+      </div>
+
+      <div class="form-group">
+        <div class="form-label" data-i18n="resources.url">URL</div>
+        <input type="url" class="form-control" id="link-url" data-i18n-placeholder="resources.linkUrlPlaceholder" placeholder="https://example.com">
+      </div>
+
+      <div class="form-group">
+        <div class="form-label" data-i18n="resources.icon">Icon</div>
+        <select class="form-control" id="link-icon">
+          <option value="fas fa-globe" data-i18n="resources.iconWebsite">Website</option>
+          <option value="fab fa-linkedin" data-i18n="resources.iconLinkedin">LinkedIn</option>
+          <option value="fab fa-github" data-i18n="resources.iconGithub">GitHub</option>
+          <option value="fab fa-behance" data-i18n="resources.iconBehance">Behance</option>
+          <option value="fab fa-dribbble" data-i18n="resources.iconDribbble">Dribbble</option>
+          <option value="fab fa-vimeo" data-i18n="resources.iconVimeo">Vimeo</option>
+          <option value="fab fa-youtube" data-i18n="resources.iconYoutube">YouTube</option>
+          <option value="fab fa-instagram" data-i18n="resources.iconInstagram">Instagram</option>
+          <option value="fab fa-twitter" data-i18n="resources.iconTwitter">Twitter</option>
+          <option value="fas fa-folder-open" data-i18n="resources.iconPortfolio">Portfolio</option>
+          <option value="fas fa-file-video" data-i18n="resources.iconShowreel">Showreel</option>
+          <option value="fas fa-link" data-i18n="resources.iconGenericLink">Generic Link</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <div class="form-label" data-i18n="resources.descriptionOptional">Description (Optional)</div>
+        <input type="text" class="form-control" id="link-description" data-i18n-placeholder="resources.linkDescriptionPlaceholder" placeholder="Brief description">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-danger" id="delete-link" style="margin-right: auto; display: none;">
+        <i class="fas fa-trash"></i>
+        <span data-i18n="common.delete">Delete</span>
+      </button>
+      <button class="btn btn-outline" id="cancel-link" data-i18n="common.cancel">Cancel</button>
+      <button class="btn btn-primary" id="save-link" data-i18n="common.save">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Confirm Dialog Modal -->
+<div class="modal-backdrop" id="confirm-dialog-modal">
+  <div class="modal" style="max-width: 400px;">
+    <div class="modal-header">
+      <h3 class="modal-title" data-i18n="resources.confirmation">Confirmation</h3>
+      <button class="modal-close">&times;</button>
+    </div>
+    <div class="modal-body">
+      <p id="confirm-dialog-message" data-i18n="resources.confirmDeleteMessage">Are you sure you want to delete this item?</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" id="cancel-confirm" data-i18n="common.cancel">Cancel</button>
+      <button class="btn btn-danger" id="confirm-action" data-i18n="common.delete">Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast Container -->
+<div id="toast-container"></div>
+
+<style>
+/* Linktree Links Styles */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+}
+
+.linktree-links {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.linktree-link-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: 8px 12px;
+  background: linear-gradient(135deg, rgba(79, 109, 245, 0.1), rgba(141, 103, 247, 0.1));
+  border: 1px solid rgba(79, 109, 245, 0.3);
+  border-radius: var(--radius);
+  color: var(--primary);
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all var(--transition);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.linktree-link-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.linktree-link-btn:hover {
+  background: linear-gradient(135deg, rgba(79, 109, 245, 0.2), rgba(141, 103, 247, 0.2));
+  border-color: rgba(79, 109, 245, 0.5);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(79, 109, 245, 0.3);
+  color: white;
+}
+
+.linktree-link-btn:hover::before {
+  left: 100%;
+}
+
+.linktree-link-btn.active {
+  background: var(--gradient-primary);
+  border-color: transparent;
+  color: white;
+  box-shadow: 0 4px 15px rgba(79, 109, 245, 0.4);
+}
+
+.linktree-link-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.linktree-link-btn:disabled:hover {
+  background: linear-gradient(135deg, rgba(79, 109, 245, 0.1), rgba(141, 103, 247, 0.1));
+  border-color: rgba(79, 109, 245, 0.3);
+  color: var(--primary);
+  transform: none;
+  box-shadow: none;
+}
+
+.linktree-link-btn i {
+  font-size: 0.9rem;
+}
+
+.linktree-separator {
+  width: 1px;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.2);
+  margin: 0 var(--space-xs);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .header-actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-sm);
+  }
+  
+  .linktree-links {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  
+  .linktree-link-btn {
+    font-size: 0.8rem;
+    padding: 6px 10px;
+  }
+}
+</style>

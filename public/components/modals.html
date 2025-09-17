@@ -1,0 +1,703 @@
+<!-- Add Company Modal -->
+<div class="modal-backdrop" id="add-company-modal">
+    <div class="modal">
+        <div class="modal-header">
+            <h3 class="modal-title">Add New Company</h3>
+            <button class="modal-close" id="close-add-company-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <div class="form-label">Company Name</div>
+                <input type="text" class="form-control" id="new-company-name" placeholder="Enter company name">
+            </div>
+
+            <div class="form-group">
+                <div class="form-label">Industry</div>
+                <select class="form-control" id="new-company-type">
+                    <option value="Technology">Technology</option>
+                    <option value="Healthcare">Healthcare</option>
+                    <option value="Finance">Finance</option>
+                    <option value="Education">Education</option>
+                    <option value="Manufacturing">Manufacturing</option>
+                    <option value="Retail">Retail</option>
+                    <option value="Consulting">Consulting</option>
+                    <option value="Non-profit">Non-profit</option>
+                    <option value="Government">Government</option>
+                    <option value="Energy">Energy</option>
+                    <option value="Media">Media</option>
+                    <option value="Transportation">Transportation</option>
+                    <option value="Real Estate">Real Estate</option>
+                    <option value="Food & Beverage">Food & Beverage</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <div class="form-label">Location</div>
+                <input type="text" class="form-control" id="new-company-location" placeholder="City, Country">
+            </div>
+
+            <div class="form-group">
+                <div class="form-label">Website</div>
+                <input type="text" class="form-control" id="new-company-website" placeholder="https://example.com">
+            </div>
+
+            <div class="form-group">
+                <div class="form-label">LinkedIn</div>
+                <input type="text" class="form-control" id="new-company-linkedin" placeholder="https://linkedin.com/company/example">
+            </div>
+
+            <div class="form-group">
+                <div class="form-label">Career URL</div>
+                <input type="text" class="form-control" id="new-company-career" placeholder="https://example.com/careers">
+            </div>
+
+            <div class="form-group">
+                <div class="form-label">Contact Email</div>
+                <input type="email" class="form-control" id="new-company-email" placeholder="jobs@example.com">
+            </div>
+
+            <div class="form-group">
+                <div class="form-label">Applied Date</div>
+                <input type="date" class="form-control" id="new-company-date">
+            </div>
+
+            <div class="form-group">
+                <div class="form-label">Comments</div>
+                <textarea class="form-control" id="new-company-comments" placeholder="Add comments about this company"></textarea>
+            </div>
+
+            <div class="form-group" style="display: flex; align-items: center; margin-top: var(--space-md);">
+                <input type="checkbox" id="new-company-favorite" style="margin-right: var(--space-sm); width: 18px; height: 18px;">
+                <label for="new-company-favorite">Add to favorites</label>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline" id="cancel-add-company">Cancel</button>
+            <button class="btn btn-primary" id="save-new-company">Add Company</button>
+        </div>
+    </div>
+</div>
+
+<!-- Add Application Modal -->
+<div class="modal-backdrop" id="add-application-modal">
+    <div class="modal">
+        <div class="modal-header">
+            <h3 class="modal-title">Add to Applications</h3>
+            <button class="modal-close" id="close-add-application-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <div class="form-label">Job Title</div>
+                <input type="text" class="form-control" id="application-job-title" readonly>
+            </div>
+
+            <div class="form-group">
+                <div class="form-label">Company Name</div>
+                <input type="text" class="form-control" id="application-company-name" readonly>
+            </div>
+
+            <div class="form-group">
+                <div class="form-label">Applied Date</div>
+                <input type="date" class="form-control" id="application-date">
+            </div>
+
+            <div class="form-group">
+                <div class="form-label">Contact Email</div>
+                <input type="email" class="form-control" id="application-email" placeholder="Enter contact email (optional)">
+            </div>
+
+            <div class="form-group">
+                <div class="form-label">Comments</div>
+                <textarea class="form-control" id="application-comments" placeholder="Add your comments about this application" rows="4"></textarea>
+            </div>
+
+            <input type="hidden" id="application-location">
+            <input type="hidden" id="application-website">
+            <input type="hidden" id="application-career">
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline" id="cancel-add-application">Cancel</button>
+            <button class="btn btn-primary" id="save-application">Add to Applications</button>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Company Modal -->
+<div class="modal-backdrop" id="edit-company-modal">
+    <div class="modal">
+        <div class="modal-header">
+            <h3 class="modal-title">Edit Company</h3>
+            <button class="modal-close" id="close-edit-company-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <input type="hidden" id="edit-company-id">
+            <div class="form-group">
+                <div class="form-label">Company Name</div>
+                <input type="text" class="form-control" id="edit-company-name" placeholder="Enter company name">
+            </div>
+
+            <div class="form-group">
+                <div class="form-label">Industry</div>
+                <select class="form-control" id="edit-company-type">
+                    <option value="Technology">Technology</option>
+                    <option value="Healthcare">Healthcare</option>
+                    <option value="Finance">Finance</option>
+                    <option value="Education">Education</option>
+                    <option value="Manufacturing">Manufacturing</option>
+                    <option value="Retail">Retail</option>
+                    <option value="Consulting">Consulting</option>
+                    <option value="Non-profit">Non-profit</option>
+                    <option value="Government">Government</option>
+                    <option value="Energy">Energy</option>
+                    <option value="Media">Media</option>
+                    <option value="Transportation">Transportation</option>
+                    <option value="Real Estate">Real Estate</option>
+                    <option value="Food & Beverage">Food & Beverage</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <div class="form-label">Location</div>
+                <input type="text" class="form-control" id="edit-company-location" placeholder="City, Country">
+            </div>
+
+            <div class="form-group">
+                <div class="form-label">Website</div>
+                <input type="text" class="form-control" id="edit-company-website" placeholder="https://example.com">
+            </div>
+
+            <div class="form-group">
+                <div class="form-label">LinkedIn</div>
+                <input type="text" class="form-control" id="edit-company-linkedin" placeholder="https://linkedin.com/company/example">
+            </div>
+
+            <div class="form-group">
+                <div class="form-label">Career URL</div>
+                <input type="text" class="form-control" id="edit-company-career" placeholder="https://example.com/careers">
+            </div>
+
+            <div class="form-group">
+                <div class="form-label">Contact Email</div>
+                <input type="email" class="form-control" id="edit-company-email" placeholder="jobs@example.com">
+            </div>
+
+            <div class="form-group">
+                <div class="form-label">Applied Date</div>
+                <input type="date" class="form-control" id="edit-company-date">
+            </div>
+
+            <div class="form-group">
+                <div class="form-label">Comments</div>
+                <textarea class="form-control" id="edit-company-comments" placeholder="Add comments about this company"></textarea>
+            </div>
+
+            <div class="form-group" style="display: flex; align-items: center; margin-top: var(--space-md);">
+                <input type="checkbox" id="edit-company-favorite" style="margin-right: var(--space-sm); width: 18px; height: 18px;">
+                <label for="edit-company-favorite">Add to favorites</label>
+            </div>
+        </div>
+        <div class="modal-footer" style="display: flex; justify-content: space-between; align-items: center;">
+            <button class="btn btn-danger-improved" id="delete-company">
+                <i class="fas fa-trash"></i> Delete
+            </button>
+            <div style="display: flex; gap: var(--space-sm);">
+                <button class="btn btn-outline" id="cancel-edit-company">Cancel</button>
+                <button class="btn btn-primary" id="save-edit-company">Save Changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal-backdrop" id="delete-confirmation-modal">
+    <div class="modal" style="max-width: 450px;">
+        <div class="modal-header">
+            <h3 class="modal-title">Delete Company</h3>
+            <button class="modal-close" id="close-delete-confirmation-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div style="text-align: center; padding: var(--space-md) 0;">
+                <div style="color: var(--danger); font-size: 3rem; margin-bottom: var(--space-md);">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <p style="font-size: 1.1rem; margin-bottom: var(--space-sm);">
+                    Are you sure you want to delete <strong><span id="company-name-to-delete"></span></strong>
+                </p>
+                <p style="color: rgba(255, 255, 255, 0.7); font-size: 0.9rem;">
+                    This action cannot be undone.
+                </p>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline" id="cancel-delete-confirmation">Cancel</button>
+            <button class="btn btn-danger-improved" id="confirm-delete-company">
+                <i class="fas fa-trash"></i> Delete Company
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Export Modal -->
+<div class="modal-backdrop" id="export-modal">
+    <div class="modal">
+        <div class="modal-header">
+            <h3 class="modal-title">Export Data</h3>
+            <button class="modal-close" id="close-export-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p style="margin-bottom: var(--space-md); line-height: 1.5;">Copy the JSON data below and save it to a file for backup.</p>
+            <textarea class="form-control" id="export-data" style="height: 300px; font-family: monospace; font-size: 0.9rem;" readonly></textarea>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline" id="close-export">Close</button>
+            <button class="btn btn-primary" id="copy-export-data">
+                <i class="fas fa-copy"></i> Copy to Clipboard
+            </button>
+            <button class="btn btn-success" id="download-export-data">
+                <i class="fas fa-download"></i> Download
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Add Cover Letter Modal -->
+<div class="modal-backdrop" id="add-cover-letter-modal">
+    <div class="modal">
+        <div class="modal-header">
+            <h3 class="modal-title">Add Cover Letter</h3>
+            <button class="modal-close" id="close-add-cover-letter-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <div class="form-label">Title</div>
+                <input type="text" class="form-control" id="cover-letter-title" placeholder="e.g., Software Engineer Application">
+            </div>
+
+            <div class="form-group">
+                <div class="form-label">Content</div>
+                <textarea class="form-control" id="cover-letter-content" style="height: 300px; font-family: inherit;" placeholder="Write your cover letter template here..."></textarea>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline" id="cancel-add-cover-letter">Cancel</button>
+            <button class="btn btn-primary" id="save-cover-letter">Save Cover Letter</button>
+        </div>
+    </div>
+</div>
+
+<!-- View Cover Letter Modal -->
+<div class="modal-backdrop" id="view-cover-letter-modal">
+    <div class="modal">
+        <div class="modal-header">
+            <h3 class="modal-title" id="view-cover-letter-title">Cover Letter</h3>
+            <button class="modal-close" id="close-view-cover-letter-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div id="view-cover-letter-content" style="white-space: pre-wrap; line-height: 1.6;"></div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline" id="close-view-cover-letter">Close</button>
+            <button class="btn btn-primary" id="edit-cover-letter">
+                <i class="fas fa-pen"></i> Edit
+            </button>
+            <button class="btn btn-success" id="copy-cover-letter">
+                <i class="fas fa-copy"></i> Copy
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Add Comments Modal -->
+<div class="modal-backdrop" id="add-comments-modal">
+    <div class="modal">
+        <div class="modal-header">
+            <h3 class="modal-title">Add Comments</h3>
+            <button class="modal-close" id="close-add-comments-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <input type="hidden" id="comments-company-id">
+            <div class="form-group">
+                <div class="form-label">Title</div>
+                <input type="text" class="form-control" id="comments-title" placeholder="e.g., Interview Notes, Application Status">
+            </div>
+
+            <div class="form-group">
+                <div class="form-label">Content</div>
+                <textarea class="form-control" id="comments-content" style="height: 300px; font-family: inherit;" placeholder="Write your detailed comments here..."></textarea>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline" id="cancel-add-comments">Cancel</button>
+            <button class="btn btn-primary" id="save-comments">Save Comments</button>
+        </div>
+    </div>
+</div>
+
+<!-- Add Link Modal -->
+<div class="modal-backdrop" id="add-link-modal">
+    <div class="modal">
+        <div class="modal-header">
+            <h3 class="modal-title">Add Professional Link</h3>
+            <button class="modal-close" id="close-add-link-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <div class="form-label">Title</div>
+                <input type="text" class="form-control" id="link-title" placeholder="e.g., Portfolio, LinkedIn, Showreel">
+            </div>
+
+            <div class="form-group">
+                <div class="form-label">URL</div>
+                <input type="url" class="form-control" id="link-url" placeholder="https://example.com">
+            </div>
+
+            <div class="form-group">
+                <div class="form-label">Icon</div>
+                <select class="form-control" id="link-icon">
+                    <option value="fas fa-globe">Website</option>
+                    <option value="fab fa-linkedin">LinkedIn</option>
+                    <option value="fab fa-github">GitHub</option>
+                    <option value="fab fa-behance">Behance</option>
+                    <option value="fab fa-dribbble">Dribbble</option>
+                    <option value="fab fa-vimeo">Vimeo</option>
+                    <option value="fab fa-youtube">YouTube</option>
+                    <option value="fab fa-instagram">Instagram</option>
+                    <option value="fab fa-twitter">Twitter</option>
+                    <option value="fas fa-folder-open">Portfolio</option>
+                    <option value="fas fa-file-video">Showreel</option>
+                    <option value="fas fa-link">Generic Link</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <div class="form-label">Description (Optional)</div>
+                <input type="text" class="form-control" id="link-description" placeholder="Brief description">
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline" id="cancel-add-link">Cancel</button>
+            <button class="btn btn-primary" id="save-link">Save Link</button>
+        </div>
+    </div>
+</div>
+
+<!-- Reset Data Confirmation Modal -->
+<div class="modal-backdrop" id="reset-confirm-modal">
+    <div class="modal">
+        <div class="modal-header">
+            <h3 class="modal-title">Reset All Data</h3>
+            <button class="modal-close" id="close-reset-confirm-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p style="margin-bottom: var(--space-md); line-height: 1.5; color: var(--danger);">
+                <i class="fas fa-exclamation-triangle" style="margin-right: 8px;"></i>
+                <strong>Warning:</strong> This will permanently delete all your saved data, including companies, applications, cover letters, and links.
+            </p>
+            <p style="line-height: 1.5;">
+                Are you sure you want to proceed? This action cannot be undone.
+            </p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline" id="cancel-reset">Cancel</button>
+            <button class="btn btn-danger-improved" id="confirm-reset">
+                <i class="fas fa-trash"></i> Reset All Data
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- CSV Import Modal -->
+<div class="modal-backdrop" id="import-modal">
+    <div class="modal csv-import-modal">
+        <div class="modal-header">
+            <h3 class="modal-title">Import Companies from CSV</h3>
+            <button class="modal-close" id="close-import-modal">&times;</button>
+        </div>
+        
+        <!-- Step 1: Upload -->
+        <div id="upload-step" class="modal-body">
+            <div class="import-step-header">
+                <div class="step-indicator">
+                    <span class="step-number active">1</span>
+                    <span class="step-title">Upload CSV File</span>
+                </div>
+            </div>
+            
+            <div class="csv-upload-section">
+                <div class="csv-upload-area" id="csv-upload-area">
+                    <div class="upload-icon">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                    </div>
+                    <h4>Upload your CSV file</h4>
+                    <p>Drag and drop your CSV file here, or click to browse</p>
+                    <p class="upload-hint">Supported format: .csv files only</p>
+                </div>
+                <input type="file" id="csv-file-input" accept=".csv" style="display: none;">
+            </div>
+            
+            <div id="csv-preview-area" class="csv-preview-section"></div>
+            
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancel-import">Cancel</button>
+                <button class="btn btn-primary" id="next-to-mapping" disabled>Next</button>
+            </div>
+        </div>
+        
+        <!-- Step 2: Column Mapping -->
+        <div id="mapping-step" class="modal-body" style="display: none;">
+            <div class="import-step-header">
+                <div class="step-indicator">
+                    <span class="step-number active">2</span>
+                    <span class="step-title">Map Columns</span>
+                </div>
+            </div>
+            
+            <div id="mapping-container"></div>
+            <div id="mapping-preview" class="mapping-preview-section"></div>
+            
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="back-to-upload">Back</button>
+                <button class="btn btn-primary" id="next-to-preview">Preview Import</button>
+            </div>
+        </div>
+        
+        <!-- Step 3: Preview & Confirm -->
+        <div id="preview-step" class="modal-body" style="display: none;">
+            <div class="import-step-header">
+                <div class="step-indicator">
+                    <span class="step-number active">3</span>
+                    <span class="step-title">Preview & Confirm</span>
+                </div>
+            </div>
+            
+            <div id="import-preview"></div>
+            
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="back-to-mapping">Back</button>
+                <button class="btn btn-success" id="confirm-import">
+                    <i class="fas fa-check"></i>
+                    Confirm Import
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Clear All Applied Dates Modal -->
+<div class="modal-backdrop" id="clear-all-dates-modal">
+    <div class="modal" style="max-width: 450px;">
+        <div class="modal-header">
+            <h3 class="modal-title">Clear All Applied Dates</h3>
+            <button class="modal-close" id="close-clear-all-dates-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div style="text-align: center; padding: var(--space-md) 0;">
+                <div style="color: #ffa502; font-size: 3rem; margin-bottom: var(--space-md);">
+                    <i class="fas fa-calendar-times"></i>
+                </div>
+                <p style="font-size: 1.1rem; margin-bottom: var(--space-sm);">
+                    Are you sure you want to clear all applied dates?
+                </p>
+                <p style="color: rgba(255, 255, 255, 0.7); font-size: 0.9rem;">
+                    This will remove all application dates but keep your companies. This action cannot be undone.
+                </p>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline" id="cancel-clear-all-dates">Cancel</button>
+            <button class="btn btn-warning" id="confirm-clear-all-dates">
+                <i class="fas fa-calendar-times"></i> Clear All Dates
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Clear Selected Applied Dates Modal -->
+<div class="modal-backdrop" id="clear-selected-dates-modal">
+    <div class="modal" style="max-width: 450px;">
+        <div class="modal-header">
+            <h3 class="modal-title">Clear Selected Applied Dates</h3>
+            <button class="modal-close" id="close-clear-selected-dates-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div style="text-align: center; padding: var(--space-md) 0;">
+                <div style="color: #ffa502; font-size: 3rem; margin-bottom: var(--space-md);">
+                    <i class="fas fa-calendar-minus"></i>
+                </div>
+                <p style="font-size: 1.1rem; margin-bottom: var(--space-sm);">
+                    Are you sure you want to clear applied dates for selected companies?
+                </p>
+                <p style="color: rgba(255, 255, 255, 0.7); font-size: 0.9rem;">
+                    This will remove application dates for selected companies only. This action cannot be undone.
+                </p>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline" id="cancel-clear-selected-dates">Cancel</button>
+            <button class="btn btn-warning" id="confirm-clear-selected-dates">
+                <i class="fas fa-calendar-minus"></i> Clear Selected Dates
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Clear All Favorites Modal -->
+<div class="modal-backdrop" id="clear-all-favorites-modal">
+    <div class="modal" style="max-width: 450px;">
+        <div class="modal-header">
+            <h3 class="modal-title">Clear All Favorites</h3>
+            <button class="modal-close" id="close-clear-all-favorites-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div style="text-align: center; padding: var(--space-md) 0;">
+                <div style="color: #ffa502; font-size: 3rem; margin-bottom: var(--space-md);">
+                    <i class="fas fa-star-half-alt"></i>
+                </div>
+                <p style="font-size: 1.1rem; margin-bottom: var(--space-sm);">
+                    Are you sure you want to remove all companies from favorites?
+                </p>
+                <p style="color: rgba(255, 255, 255, 0.7); font-size: 0.9rem;">
+                    This will remove the favorite status from all companies. Companies will remain but won't be marked as favorites.
+                </p>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline" id="cancel-clear-all-favorites">Cancel</button>
+            <button class="btn btn-warning" id="confirm-clear-all-favorites">
+                <i class="fas fa-star-half-alt"></i> Clear All Favorites
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Clear Selected Favorites Modal -->
+<div class="modal-backdrop" id="clear-selected-favorites-modal">
+    <div class="modal" style="max-width: 450px;">
+        <div class="modal-header">
+            <h3 class="modal-title">Clear Selected Favorites</h3>
+            <button class="modal-close" id="close-clear-selected-favorites-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div style="text-align: center; padding: var(--space-md) 0;">
+                <div style="color: #ffa502; font-size: 3rem; margin-bottom: var(--space-md);">
+                    <i class="fas fa-star-half"></i>
+                </div>
+                <p style="font-size: 1.1rem; margin-bottom: var(--space-sm);">
+                    Are you sure you want to remove selected companies from favorites?
+                </p>
+                <p style="color: rgba(255, 255, 255, 0.7); font-size: 0.9rem;">
+                    This will remove the favorite status from selected companies only. Companies will remain but won't be marked as favorites.
+                </p>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline" id="cancel-clear-selected-favorites">Cancel</button>
+            <button class="btn btn-warning" id="confirm-clear-selected-favorites">
+                <i class="fas fa-star-half"></i> Clear Selected Favorites
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Clear All Companies Modal -->
+<div class="modal-backdrop" id="clear-all-companies-modal">
+    <div class="modal" style="max-width: 450px;">
+        <div class="modal-header">
+            <h3 class="modal-title">Clear All Companies</h3>
+            <button class="modal-close" id="close-clear-all-companies-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div style="text-align: center; padding: var(--space-md) 0;">
+                <div style="color: #ff4757; font-size: 3rem; margin-bottom: var(--space-md);">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <p style="font-size: 1.1rem; margin-bottom: var(--space-sm); color: #ff4757;">
+                    <strong>Warning:</strong> This will permanently delete ALL companies!
+                </p>
+                <p style="color: rgba(255, 255, 255, 0.7); font-size: 0.9rem;">
+                    This action will remove all your companies, applications, and related data. This cannot be undone.
+                </p>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline" id="cancel-clear-all-companies">Cancel</button>
+            <button class="btn btn-danger-improved" id="confirm-clear-all-companies">
+                <i class="fas fa-trash-alt"></i> Delete All Companies
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Selected Companies Modal -->
+<div class="modal-backdrop" id="delete-selected-modal">
+    <div class="modal" style="max-width: 500px;">
+        <div class="modal-header">
+            <h3 class="modal-title">Delete Selected Companies</h3>
+            <button class="modal-close" id="close-delete-selected-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div style="padding: var(--space-md) 0;">
+                <div style="color: #ff4757; font-size: 2rem; margin-bottom: var(--space-md); text-align: center;">
+                    <i class="fas fa-trash"></i>
+                </div>
+                <p style="font-size: 1.1rem; margin-bottom: var(--space-md); text-align: center;">
+                    Are you sure you want to delete <strong><span id="selected-companies-count">0</span> selected companies?</strong>
+                </p>
+                <div style="max-height: 200px; overflow-y: auto; background: rgba(0,0,0,0.2); border-radius: 4px; padding: var(--space-sm); margin-bottom: var(--space-sm);">
+                    <ul id="selected-companies-list" style="list-style: none; padding: 0; margin: 0; color: rgba(255, 255, 255, 0.8); font-size: 0.9rem;">
+                        <!-- Selected company names will be populated here -->
+                    </ul>
+                </div>
+                <p style="color: rgba(255, 255, 255, 0.7); font-size: 0.9rem; text-align: center;">
+                    This action cannot be undone.
+                </p>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline" id="cancel-delete-selected">Cancel</button>
+            <button class="btn btn-danger-improved" id="confirm-delete-selected">
+                <i class="fas fa-trash"></i> Delete Selected
+            </button>
+        </div>
+    </div>
+</div>
+
+<style>
+.btn-danger-improved {
+    background: #ff4757 !important;
+    color: #ffffff !important;
+    border: 1px solid #ff4757 !important;
+    font-weight: 600 !important;
+}
+
+.btn-danger-improved:hover {
+    background: #ff3838 !important;
+    border-color: #ff3838 !important;
+    color: #ffffff !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(255, 71, 87, 0.3);
+}
+
+.btn-warning {
+    background: #ffa502 !important;
+    color: #ffffff !important;
+    border: 1px solid #ffa502 !important;
+    font-weight: 600 !important;
+}
+
+.btn-warning:hover {
+    background: #ff9500 !important;
+    border-color: #ff9500 !important;
+    color: #ffffff !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(255, 165, 2, 0.3);
+}
+
+.btn.active {
+    background: rgba(79, 109, 245, 0.2);
+    border-color: var(--primary);
+    color: var(--primary);
+}
+</style>
